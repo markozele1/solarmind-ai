@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { ForecastData } from "@/pages/Index";
-import { Sun, Sunrise, Sunset, RefreshCw, Settings } from "lucide-react";
+import { Sun, CloudSun, Cloud, CloudDrizzle, Sunrise, Sunset, RefreshCw, Settings, LucideIcon } from "lucide-react";
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { SettingsDialog } from "./SettingsDialog";
 
@@ -33,11 +33,11 @@ export const ForecastDashboard = ({
   
   const getSunIntensity = (ghiCloudy: number, ghiClear: number) => {
     const percentage = (ghiCloudy / ghiClear) * 100;
-    if (percentage >= 80) return { opacity: 1, label: "Excellent" };
-    if (percentage >= 60) return { opacity: 0.8, label: "Very Good" };
-    if (percentage >= 40) return { opacity: 0.6, label: "Good" };
-    if (percentage >= 20) return { opacity: 0.4, label: "Fair" };
-    return { opacity: 0.25, label: "Poor" };
+    if (percentage >= 80) return { icon: Sun, label: "Excellent", fill: true };
+    if (percentage >= 60) return { icon: CloudSun, label: "Very Good", fill: false };
+    if (percentage >= 40) return { icon: CloudSun, label: "Good", fill: false };
+    if (percentage >= 20) return { icon: Cloud, label: "Fair", fill: false };
+    return { icon: CloudDrizzle, label: "Poor", fill: false };
   };
 
   return (
@@ -131,6 +131,7 @@ export const ForecastDashboard = ({
                   const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
                   const dateStr = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
                   const intensity = getSunIntensity(day.ghi_cloudy_kwh, day.ghi_clear_kwh);
+                  const IconComponent = intensity.icon;
                   
                   return (
                     <UITooltip key={day.date}>
@@ -138,11 +139,10 @@ export const ForecastDashboard = ({
                         <div className="flex flex-col items-center p-4 rounded-lg border border-border hover:bg-accent/5 transition-colors cursor-pointer">
                           <p className="text-sm font-medium text-foreground mb-1">{dayName}</p>
                           <p className="text-xs text-muted-foreground mb-3">{dateStr}</p>
-                          <Sun 
-                            className="h-12 w-12 mb-2 text-primary transition-opacity" 
-                            style={{ opacity: intensity.opacity }}
+                          <IconComponent 
+                            className="h-12 w-12 mb-2 text-primary transition-all" 
                             strokeWidth={2.5}
-                            fill="currentColor"
+                            fill={intensity.fill ? "currentColor" : "none"}
                           />
                           <p className="text-xs font-medium text-muted-foreground">{intensity.label}</p>
                         </div>
