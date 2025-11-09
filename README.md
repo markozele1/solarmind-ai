@@ -29,7 +29,7 @@
 ## 🚀 Key Features
 
 ### 1. **AI-Powered Conversational Advisor**
-- Integrated conversational AI chatbot using **Google Gemini 2.5 Flash** via Lovable AI Gateway
+- Integrated conversational AI chatbot using **OpenAI GPT-4o-mini**
 - Natural language explanations of complex solar concepts
 - Personalized recommendations based on user's specific parameters
 - Interactive Q&A for instant solar education
@@ -43,7 +43,7 @@
 - Validated input system with smart defaults based on realistic scenarios
 
 ### 3. **AI-Generated Personalized Summaries**
-- Automated daily insights using **OpenAI GPT-5 Mini**
+- Automated daily insights using **OpenAI GPT-4o-mini**
 - Conversational tone tailored for homeowners
 - Contextual analysis of weather patterns and energy production
 - Actionable recommendations for maximizing solar benefits
@@ -66,19 +66,17 @@
 ## 🧠 Technical Implementation
 
 ### **AI Integration - Central to Solution**
-Our application leverages **three distinct AI models** to solve user pain points:
+Our application leverages **AI and intelligent APIs** to solve user pain points:
 
-1. **Google Gemini 2.5 Flash** (Lovable AI Gateway)
+1. **OpenAI GPT-4o-mini** (Edge Functions)
    - Powers the interactive chat advisor
    - Handles complex solar queries with natural language understanding
    - Provides context-aware responses based on user's location and system specs
-
-2. **OpenAI GPT-5 Mini** (Edge Function)
    - Generates personalized daily summaries
    - Analyzes forecast data to create actionable insights
    - Adapts communication style for non-technical audiences
 
-3. **Location Intelligence** (OpenWeather Geocoding API)
+2. **Location Intelligence** (OpenWeather Geocoding API)
    - Autocomplete city search with debounced API calls
    - Coordinates-based solar radiation data retrieval
    - Ensures accurate location-specific calculations
@@ -104,15 +102,15 @@ Our application leverages **three distinct AI models** to solve user pain points
 │  • geocoding     │
 └────────┬─────────┘
          │
-         ├─────────────────┬─────────────────┐
-         │                 │                 │
-┌────────▼─────┐  ┌────────▼─────┐  ┌───────▼────────┐
-│ Lovable AI   │  │   OpenAI     │  │  OpenWeather   │
-│   Gateway    │  │   API        │  │  Solar API     │
-│              │  │              │  │                │
-│ Gemini 2.5   │  │  GPT-5 Mini  │  │ Radiation Data │
-│   Flash      │  │              │  │                │
-└──────────────┘  └──────────────┘  └────────────────┘
+         ├─────────────────┐
+         │                 │
+┌────────▼─────┐  ┌───────▼────────┐
+│   OpenAI     │  │  OpenWeather   │
+│   API        │  │  Solar API     │
+│              │  │                │
+│ GPT-4o-mini  │  │ Radiation Data │
+│              │  │                │
+└──────────────┘  └────────────────┘
 ```
 
 ### **Tech Stack**
@@ -120,8 +118,7 @@ Our application leverages **three distinct AI models** to solve user pain points
 - **UI Framework**: Tailwind CSS, shadcn/ui components
 - **Backend**: Lovable Cloud (Supabase Edge Functions)
 - **AI Models**: 
-  - Lovable AI Gateway (Google Gemini 2.5 Flash)
-  - OpenAI GPT-5 Mini
+  - OpenAI GPT-4o-mini
 - **Data APIs**: 
   - OpenWeather Solar Radiation API
   - OpenWeather Geocoding API
@@ -136,8 +133,6 @@ Our application leverages **three distinct AI models** to solve user pain points
 - CORS-enabled edge functions for cross-origin security
 
 ---
-
-## 🎨 Innovation & Creativity
 
 ### **Novel Approach**
 Unlike generic solar calculators that provide static estimates, SolarMind combines:
@@ -161,9 +156,6 @@ Unlike generic solar calculators that provide static estimates, SolarMind combin
 
 ### **Live Application**
 🌐 **[Try SolarMind Live](https://lovable.dev/projects/71f810b7-7114-4b34-91f4-8c65d4f47335)**
-
-### **Public Repository**
-💻 **[GitHub - Full Source Code](https://github.com/YOUR_USERNAME/YOUR_REPO)**
 
 ---
 
@@ -211,7 +203,18 @@ This project uses **Lovable Cloud** for backend services. API keys are managed s
 
 ## 📄 License
 
-This project is open-source and available under the MIT License.
+This project is licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0)**.
+
+This means you are free to:
+- **Share** — copy and redistribute the material in any medium or format
+- **Adapt** — remix, transform, and build upon the material
+
+Under the following terms:
+- **Attribution** — You must give appropriate credit to Team O(no)
+- **NonCommercial** — You may not use the material for commercial purposes
+- **ShareAlike** — If you remix or build upon this material, you must distribute your contributions under the same license
+
+For more details, see the [LICENSE](LICENSE) file or visit [Creative Commons](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 
 ---
 
@@ -219,9 +222,8 @@ This project is open-source and available under the MIT License.
 
 Built for **hAIckathon** using:
 - [Lovable](https://lovable.dev) - Full-stack development platform
-- [Lovable AI Gateway](https://ai.gateway.lovable.dev) - AI model integration
 - [OpenWeather API](https://openweathermap.org/api) - Solar radiation data
-- [OpenAI](https://openai.com) - GPT-5 Mini for summaries
+- [OpenAI](https://openai.com) - GPT-4o-mini for AI chat and summaries
 
 ---
 
