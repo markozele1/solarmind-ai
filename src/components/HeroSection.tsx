@@ -84,7 +84,7 @@ export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData
           </div>
         </div>
         
-        <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-foreground via-primary to-solar-glow bg-clip-text text-transparent">
+        <h1 className="text-4xl md:text-6xl font-bold text-primary">
           Discover Your Solar Potential
         </h1>
         
