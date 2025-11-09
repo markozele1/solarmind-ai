@@ -121,6 +121,17 @@ const Index = () => {
     }
   };
 
+  const handleUpdateHomeParams = (roofArea: number, systemSize: number, panelEfficiency: number, systemCost: number) => {
+    setCurrentRoofArea(roofArea);
+    setCurrentSystemSize(systemSize);
+    setPanelEfficiency(panelEfficiency);
+    setSystemCost(systemCost);
+    toast({
+      title: "Settings updated",
+      description: "Your home parameters have been updated",
+    });
+  };
+
   const handleRefresh = () => {
     const now = Date.now();
     const timeSinceLastRefresh = now - lastRefreshTime;
@@ -156,6 +167,7 @@ const Index = () => {
             data={forecastData} 
             onRefresh={handleRefresh}
             onUpdateSettings={handleGetForecast}
+            onUpdateHomeParams={handleUpdateHomeParams}
             isLoading={isLoading}
             useMockData={useMockData}
             onToggleMockData={setUseMockData}
