@@ -18,16 +18,20 @@ export const AISummary = ({ data }: AISummaryProps) => {
   const generateSummary = async () => {
     setIsLoading(true);
     try {
+      const today = data.days[0];
+      
       const { data: result, error } = await supabase.functions.invoke("ai-summary", {
         body: {
-          location: data.location,
-          date: data.days[0].date,
-          avgGhiClear: data.days.reduce((sum, d) => sum + d.ghi_clear, 0) / data.days.length,
-          avgGhiCloudy: data.days.reduce((sum, d) => sum + d.ghi_cloudy, 0) / data.days.length,
-          sunrise: data.days[0].sunrise,
-          sunset: data.days[0].sunset,
-          estimatedEnergy: data.estimatedEnergy,
-          co2Savings: data.co2Savings,
+          city: data.location,
+          date: today.date,
+          clear_ghi_kwh_m2: today.ghi_clear_kwh,
+          cloudy_ghi_kwh_m2: today.ghi_cloudy_kwh,
+          sunlight_quality_pct: today.sunlightQuality,
+          peak_sun_hours: today.peakSunHours,
+          energy_kwh: today.estimatedEnergy,
+          co2_saved_kg: today.co2Savings,
+          sunrise: today.sunrise,
+          sunset: today.sunset,
         },
       });
 

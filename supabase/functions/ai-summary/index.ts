@@ -12,25 +12,27 @@ serve(async (req) => {
   }
 
   try {
-    const { location, date, avgGhiClear, avgGhiCloudy, sunrise, sunset, estimatedEnergy, co2Savings } = await req.json();
+    const { city, date, clear_ghi_kwh_m2, cloudy_ghi_kwh_m2, sunlight_quality_pct, peak_sun_hours, energy_kwh, co2_saved_kg, sunrise, sunset } = await req.json();
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
 
     if (!OPENAI_API_KEY) {
       throw new Error("OpenAI API key not configured");
     }
 
-    console.log("Generating AI summary for:", location);
+    console.log("Generating AI summary for:", city);
 
-    const prompt = `Location: ${location}
+    const prompt = `Solar Data Summary:
+City: ${city}
 Date: ${date}
-Average GHI (clear sky): ${avgGhiClear.toFixed(0)} W/m²
-Average GHI (cloudy): ${avgGhiCloudy.toFixed(0)} W/m²
-Sunrise: ${sunrise}
-Sunset: ${sunset}
-Estimated daily energy: ${estimatedEnergy.toFixed(1)} kWh
-Estimated CO₂ savings: ${co2Savings.toFixed(1)} kg
+Clear-sky GHI: ${clear_ghi_kwh_m2} kWh/m²
+Cloudy-sky GHI: ${cloudy_ghi_kwh_m2} kWh/m²
+Sunlight Quality: ${sunlight_quality_pct}% of clear-sky potential
+Peak Sun Hours: ${peak_sun_hours} hours
+Estimated Energy Output: ${energy_kwh} kWh
+CO₂ Savings: ${co2_saved_kg} kg
+Sunrise: ${sunrise}, Sunset: ${sunset}
 
-Explain this solar forecast in 2-3 sentences for a non-technical user. Mention today's sunlight quality, energy output, and CO₂ impact in an encouraging tone.`;
+Explain this solar data in 2-3 sentences for a non-technical reader. Mention today's sunlight quality, estimated energy output, and CO₂ savings.`;
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",

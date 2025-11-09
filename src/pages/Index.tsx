@@ -12,14 +12,24 @@ export interface ForecastData {
   lon: number;
   days: Array<{
     date: string;
-    ghi_clear: number;
-    ghi_cloudy: number;
+    ghi_clear_kwh: number;
+    ghi_cloudy_kwh: number;
     sunrise: string;
     sunset: string;
+    peakSunHours: number;
+    sunlightQuality: number;
+    estimatedEnergy: number;
+    co2Savings: number;
   }>;
-  peakSunHours: number;
-  estimatedEnergy: number;
-  co2Savings: number;
+  today: {
+    sunlightQuality: number;
+    peakSunHours: number;
+    estimatedEnergy: number;
+    co2Savings: number;
+    sunrise: string;
+    sunset: string;
+  };
+  roofArea: number;
 }
 
 const Index = () => {
@@ -55,11 +65,11 @@ const Index = () => {
   const handleRefresh = () => {
     if (forecastData) {
       toast({
-        title: "Refreshing data",
-        description: "Fetching latest solar irradiance data...",
+        title: "Using cached data",
+        description: "Displaying demo data based on last real Zagreb measurement",
       });
-      // Re-fetch with same parameters
-      handleGetForecast(forecastData.location, 10, 5);
+      // Re-fetch with same parameters (uses cached data)
+      handleGetForecast(forecastData.location, forecastData.roofArea, 5);
     }
   };
 

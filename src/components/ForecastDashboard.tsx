@@ -12,11 +12,9 @@ interface ForecastDashboardProps {
 export const ForecastDashboard = ({ data, onRefresh }: ForecastDashboardProps) => {
   const chartData = data.days.map((day) => ({
     date: new Date(day.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-    "Clear Sky": day.ghi_clear,
-    Cloudy: day.ghi_cloudy,
+    "Clear Sky": day.ghi_clear_kwh,
+    Cloudy: day.ghi_cloudy_kwh,
   }));
-
-  const todayData = data.days[0];
 
   return (
     <section className="container mx-auto px-4 py-12">
@@ -32,16 +30,62 @@ export const ForecastDashboard = ({ data, onRefresh }: ForecastDashboardProps) =
           </Button>
         </div>
 
+        {/* Today's Summary Card */}
+        <Card className="border-primary/20 shadow-[var(--shadow-card)] bg-gradient-to-br from-primary/5 to-transparent">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Sun className="h-5 w-5 text-primary" />
+              Today's Solar Potential
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div>
+                <p className="text-sm text-muted-foreground">Sunlight Quality</p>
+                <p className="text-2xl font-bold text-primary">{data.today.sunlightQuality.toFixed(1)}%</p>
+                <p className="text-xs text-muted-foreground">of clear-sky potential</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Peak Sun Hours</p>
+                <p className="text-2xl font-bold">{data.today.peakSunHours.toFixed(1)} h</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Energy Output</p>
+                <p className="text-2xl font-bold">{data.today.estimatedEnergy.toFixed(1)} kWh</p>
+                <p className="text-xs text-muted-foreground">for {data.roofArea} m² roof, 20% efficiency</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">CO₂ Avoided</p>
+                <p className="text-2xl font-bold text-accent">{data.today.co2Savings.toFixed(1)} kg</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Sunrise</p>
+                <p className="text-xl font-bold flex items-center gap-1">
+                  <Sunrise className="h-4 w-4" />
+                  {data.today.sunrise}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Sunset</p>
+                <p className="text-xl font-bold flex items-center gap-1">
+                  <Sunset className="h-4 w-4" />
+                  {data.today.sunset}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         <Card className="border-border shadow-[var(--shadow-card)]">
           <CardHeader>
-            <CardTitle>Global Horizontal Irradiance (GHI)</CardTitle>
+            <CardTitle>Global Horizontal Irradiance (GHI) - 7 Days</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-2">
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                 <XAxis dataKey="date" className="text-xs" />
-                <YAxis label={{ value: "W/m²", angle: -90, position: "insideLeft" }} />
+                <YAxis label={{ value: "kWh/m²", angle: -90, position: "insideLeft" }} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "hsl(var(--card))",
@@ -66,68 +110,11 @@ export const ForecastDashboard = ({ data, onRefresh }: ForecastDashboardProps) =
                 />
               </LineChart>
             </ResponsiveContainer>
+            <p className="text-xs text-muted-foreground text-center italic mt-2">
+              Demo data based on last real Zagreb measurement.
+            </p>
           </CardContent>
         </Card>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="border-border shadow-[var(--shadow-soft)]">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Sun className="h-4 w-4 text-primary" />
-                Peak Sun Hours
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{data.peakSunHours.toFixed(1)}</div>
-              <p className="text-xs text-muted-foreground mt-1">hours/day</p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border shadow-[var(--shadow-soft)]">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Sunrise className="h-4 w-4 text-primary" />
-                Sunrise / Sunset
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-lg font-bold flex items-center gap-2">
-                <Sunrise className="h-4 w-4" />
-                {todayData.sunrise}
-              </div>
-              <div className="text-lg font-bold flex items-center gap-2 mt-1">
-                <Sunset className="h-4 w-4" />
-                {todayData.sunset}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border shadow-[var(--shadow-soft)]">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Zap className="h-4 w-4 text-primary" />
-                Energy Output
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{data.estimatedEnergy.toFixed(1)}</div>
-              <p className="text-xs text-muted-foreground mt-1">kWh/day</p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border shadow-[var(--shadow-soft)] bg-gradient-to-br from-accent/5 to-transparent">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Leaf className="h-4 w-4 text-accent" />
-                CO₂ Savings
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-accent">{data.co2Savings.toFixed(1)}</div>
-              <p className="text-xs text-muted-foreground mt-1">kg/day</p>
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </section>
   );
