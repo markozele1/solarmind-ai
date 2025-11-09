@@ -5,6 +5,8 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 import { AnimatedSolarBackground } from "./AnimatedSolarBackground";
+import { CityAutocomplete } from "./CityAutocomplete";
+import { CityOption } from "@/hooks/useCityAutocomplete";
 
 interface HeroSectionProps {
   onSubmit: (city: string, roofArea: number, systemSize: number) => void;
@@ -13,17 +15,64 @@ interface HeroSectionProps {
   onToggleMockData: (value: boolean) => void;
 }
 
+const MIN_ROOF_AREA = 1;
+const MAX_ROOF_AREA = 100;
+const MIN_SYSTEM_SIZE = 1;
+const MAX_SYSTEM_SIZE = 20;
+
 export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData }: HeroSectionProps) => {
-  const [city, setCity] = useState("");
+  const [selectedCity, setSelectedCity] = useState<CityOption | null>(null);
   const [roofArea, setRoofArea] = useState("10");
   const [systemSize, setSystemSize] = useState("5");
+  const [roofAreaError, setRoofAreaError] = useState<string | null>(null);
+  const [systemSizeError, setSystemSizeError] = useState<string | null>(null);
+
+  const validateRoofArea = (value: string) => {
+    const num = parseFloat(value);
+    if (isNaN(num) || num < MIN_ROOF_AREA || num > MAX_ROOF_AREA) {
+      setRoofAreaError(`Roof area must be between ${MIN_ROOF_AREA} m² and ${MAX_ROOF_AREA} m².`);
+      return false;
+    }
+    setRoofAreaError(null);
+    return true;
+  };
+
+  const validateSystemSize = (value: string) => {
+    const num = parseFloat(value);
+    if (isNaN(num) || num < MIN_SYSTEM_SIZE || num > MAX_SYSTEM_SIZE) {
+      setSystemSizeError(`System size must be between ${MIN_SYSTEM_SIZE} kW and ${MAX_SYSTEM_SIZE} kW.`);
+      return false;
+    }
+    setSystemSizeError(null);
+    return true;
+  };
+
+  const handleRoofAreaChange = (value: string) => {
+    setRoofArea(value);
+    if (value) validateRoofArea(value);
+  };
+
+  const handleSystemSizeChange = (value: string) => {
+    setSystemSize(value);
+    if (value) validateSystemSize(value);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (city.trim()) {
-      onSubmit(city, parseFloat(roofArea), parseFloat(systemSize));
+    
+    const isRoofAreaValid = validateRoofArea(roofArea);
+    const isSystemSizeValid = validateSystemSize(systemSize);
+    
+    if (selectedCity && isRoofAreaValid && isSystemSizeValid) {
+      onSubmit(selectedCity.name, parseFloat(roofArea), parseFloat(systemSize));
     }
   };
+
+  const isFormValid = selectedCity !== null && 
+                      roofArea !== "" && 
+                      systemSize !== "" && 
+                      !roofAreaError && 
+                      !systemSizeError;
 
   return (
     <section className="relative container mx-auto px-4 py-16 md:py-24">
@@ -52,7 +101,7 @@ export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData
                   {useMockData ? "Mock Data" : "Live API Data"}
                 </Label>
                 <p className="text-xs text-muted-foreground">
-                  {useMockData ? "Using cached Zagreb data" : "Fetching from OpenWeather API"}
+                  {useMockData ? "Using cached London data" : "Fetching from OpenWeather API"}
                 </p>
               </div>
             </div>
@@ -63,18 +112,10 @@ export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData
             />
           </div>
 
-          <div className="space-y-2 text-left">
-            <Label htmlFor="city">City</Label>
-            <Input
-              id="city"
-              type="text"
-              placeholder="Enter your city"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              required
-              className="h-12 text-base"
-            />
-          </div>
+          <CityAutocomplete
+            selectedCity={selectedCity}
+            onCitySelect={setSelectedCity}
+          />
 
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-2 text-left">
@@ -82,12 +123,16 @@ export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData
               <Input
                 id="roofArea"
                 type="number"
-                min="1"
+                min={MIN_ROOF_AREA}
+                max={MAX_ROOF_AREA}
                 step="0.1"
                 value={roofArea}
-                onChange={(e) => setRoofArea(e.target.value)}
-                className="h-12 text-base"
+                onChange={(e) => handleRoofAreaChange(e.target.value)}
+                className={`h-12 text-base ${roofAreaError ? 'border-destructive focus-visible:ring-destructive' : ''}`}
               />
+              {roofAreaError && (
+                <p className="text-sm text-destructive">{roofAreaError}</p>
+              )}
             </div>
 
             <div className="space-y-2 text-left">
@@ -95,19 +140,23 @@ export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData
               <Input
                 id="systemSize"
                 type="number"
-                min="0.1"
+                min={MIN_SYSTEM_SIZE}
+                max={MAX_SYSTEM_SIZE}
                 step="0.1"
                 value={systemSize}
-                onChange={(e) => setSystemSize(e.target.value)}
-                className="h-12 text-base"
+                onChange={(e) => handleSystemSizeChange(e.target.value)}
+                className={`h-12 text-base ${systemSizeError ? 'border-destructive focus-visible:ring-destructive' : ''}`}
               />
+              {systemSizeError && (
+                <p className="text-sm text-destructive">{systemSizeError}</p>
+              )}
             </div>
           </div>
 
           <Button
             type="submit"
-            disabled={isLoading}
-            className="w-full h-12 text-lg font-semibold bg-gradient-to-r from-primary to-solar-glow hover:opacity-90 transition-opacity"
+            disabled={isLoading || !isFormValid}
+            className="w-full h-12 text-lg font-semibold bg-gradient-to-r from-primary to-solar-glow hover:opacity-90 transition-opacity disabled:opacity-50"
           >
             {isLoading ? "Analyzing Sunlight..." : "Show My Sunlight"}
           </Button>
