@@ -11,7 +11,7 @@ import { CityOption } from "@/hooks/useCityAutocomplete";
 interface SettingsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (city: string, roofArea: number, systemSize: number) => void;
+  onSubmit: (city: string, roofArea: number, systemSize: number, panelEfficiency: number, systemCost: number) => void;
   isLoading: boolean;
   useMockData: boolean;
   onToggleMockData: (value: boolean) => void;
@@ -20,6 +20,8 @@ interface SettingsDialogProps {
   currentSystemSize: number;
   currentMonthlyBill: number;
   currentElectricityRate: number;
+  currentPanelEfficiency: number;
+  currentSystemCost: number;
 }
 
 const MIN_ROOF_AREA = 1;
@@ -39,12 +41,16 @@ export const SettingsDialog = ({
   currentSystemSize,
   currentMonthlyBill,
   currentElectricityRate,
+  currentPanelEfficiency,
+  currentSystemCost,
 }: SettingsDialogProps) => {
   const [selectedCity, setSelectedCity] = useState<CityOption | null>(null);
   const [roofArea, setRoofArea] = useState(currentRoofArea.toString());
   const [systemSize, setSystemSize] = useState(currentSystemSize.toString());
   const [monthlyBill, setMonthlyBill] = useState(currentMonthlyBill.toString());
   const [electricityRate, setElectricityRate] = useState(currentElectricityRate.toString());
+  const [panelEfficiency, setPanelEfficiency] = useState(currentPanelEfficiency.toString());
+  const [systemCost, setSystemCost] = useState(currentSystemCost.toString());
   const [roofAreaError, setRoofAreaError] = useState<string | null>(null);
   const [systemSizeError, setSystemSizeError] = useState<string | null>(null);
 
@@ -54,12 +60,14 @@ export const SettingsDialog = ({
       setSystemSize(currentSystemSize.toString());
       setMonthlyBill(currentMonthlyBill.toString());
       setElectricityRate(currentElectricityRate.toString());
+      setPanelEfficiency(currentPanelEfficiency.toString());
+      setSystemCost(currentSystemCost.toString());
       setRoofAreaError(null);
       setSystemSizeError(null);
       // Reset city to show current city name (without full location data)
       setSelectedCity(null);
     }
-  }, [open, currentRoofArea, currentSystemSize, currentMonthlyBill, currentElectricityRate]);
+  }, [open, currentRoofArea, currentSystemSize, currentMonthlyBill, currentElectricityRate, currentPanelEfficiency, currentSystemCost]);
 
   const validateRoofArea = (value: string) => {
     const num = parseFloat(value);
@@ -101,7 +109,9 @@ export const SettingsDialog = ({
       // Store updated values in sessionStorage
       sessionStorage.setItem('monthlyBill', monthlyBill);
       sessionStorage.setItem('electricityRate', electricityRate);
-      onSubmit(selectedCity.name, parseFloat(roofArea), parseFloat(systemSize));
+      sessionStorage.setItem('panelEfficiency', panelEfficiency);
+      sessionStorage.setItem('systemCost', systemCost);
+      onSubmit(selectedCity.name, parseFloat(roofArea), parseFloat(systemSize), parseFloat(panelEfficiency), parseFloat(systemCost));
       onOpenChange(false);
     }
   };
@@ -184,7 +194,7 @@ export const SettingsDialog = ({
             <p className="text-sm text-muted-foreground">Optional: For more accurate savings estimates</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="monthlyBill">Monthly Electricity Bill ($)</Label>
+                <Label htmlFor="monthlyBill">Monthly Electricity Bill (€)</Label>
                 <Input
                   id="monthlyBill"
                   type="number"
@@ -196,7 +206,7 @@ export const SettingsDialog = ({
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="electricityRate">Electricity Rate ($/kWh)</Label>
+                <Label htmlFor="electricityRate">Electricity Rate (€/kWh)</Label>
                 <Input
                   id="electricityRate"
                   type="number"
@@ -205,6 +215,31 @@ export const SettingsDialog = ({
                   value={electricityRate}
                   onChange={(e) => setElectricityRate(e.target.value)}
                   placeholder="0.15"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="panelEfficiency">Panel Efficiency (%)</Label>
+                <Input
+                  id="panelEfficiency"
+                  type="number"
+                  min={10}
+                  max={30}
+                  step={0.1}
+                  value={panelEfficiency}
+                  onChange={(e) => setPanelEfficiency(e.target.value)}
+                  placeholder="20"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="systemCost">Est. System Cost (€)</Label>
+                <Input
+                  id="systemCost"
+                  type="number"
+                  min={0}
+                  step={100}
+                  value={systemCost}
+                  onChange={(e) => setSystemCost(e.target.value)}
+                  placeholder="2000"
                 />
               </div>
             </div>

@@ -10,7 +10,7 @@ import { getEnergyAnalogies, getCO2Analogies, getHouseholdComparison } from "@/l
 interface ForecastDashboardProps {
   data: ForecastData;
   onRefresh: () => void;
-  onUpdateSettings: (city: string, roofArea: number, systemSize: number) => void;
+  onUpdateSettings: (city: string, roofArea: number, systemSize: number, panelEfficiency: number, systemCost: number) => void;
   isLoading: boolean;
   useMockData: boolean;
   onToggleMockData: (value: boolean) => void;
@@ -19,6 +19,8 @@ interface ForecastDashboardProps {
   currentSystemSize: number;
   currentMonthlyBill: number;
   currentElectricityRate: number;
+  currentPanelEfficiency: number;
+  currentSystemCost: number;
 }
 
 export const ForecastDashboard = ({ 
@@ -33,6 +35,8 @@ export const ForecastDashboard = ({
   currentSystemSize,
   currentMonthlyBill,
   currentElectricityRate,
+  currentPanelEfficiency,
+  currentSystemCost,
 }: ForecastDashboardProps) => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   
@@ -82,6 +86,8 @@ export const ForecastDashboard = ({
           currentSystemSize={currentSystemSize}
           currentMonthlyBill={currentMonthlyBill}
           currentElectricityRate={currentElectricityRate}
+          currentPanelEfficiency={currentPanelEfficiency}
+          currentSystemCost={currentSystemCost}
         />
 
         {/* Today's Summary Card */}
@@ -93,14 +99,29 @@ export const ForecastDashboard = ({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               <TooltipProvider>
                 <UITooltip>
                   <TooltipTrigger asChild>
                     <div className="cursor-help">
-                      <p className="text-sm text-muted-foreground">Sunlight Quality</p>
+                      <p className="text-sm text-muted-foreground">Location Rating</p>
+                      <p className="text-2xl font-bold text-primary">{data.today.sunlightQuality >= 80 ? 'Excellent' : data.today.sunlightQuality >= 60 ? 'Very Good' : data.today.sunlightQuality >= 40 ? 'Good' : 'Fair'}</p>
+                      <p className="text-xs text-muted-foreground">{data.today.sunlightQuality.toFixed(0)}% of ideal</p>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">How good this location is for solar energy based on today's conditions compared to perfect clear-sky conditions.</p>
+                  </TooltipContent>
+                </UITooltip>
+              </TooltipProvider>
+
+              <TooltipProvider>
+                <UITooltip>
+                  <TooltipTrigger asChild>
+                    <div className="cursor-help">
+                      <p className="text-sm text-muted-foreground">Today's Efficiency</p>
                       <p className="text-2xl font-bold text-primary">{data.today.sunlightQuality.toFixed(1)}%</p>
-                      <p className="text-xs text-muted-foreground">of clear-sky potential</p>
+                      <p className="text-xs text-muted-foreground">vs. clear sky</p>
                     </div>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -213,41 +234,29 @@ export const ForecastDashboard = ({
             <CardTitle>7-Day Solar Forecast</CardTitle>
           </CardHeader>
           <CardContent>
-            <TooltipProvider>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
-                {data.days.map((day) => {
-                  const date = new Date(day.date);
-                  const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
-                  const dateStr = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-                  const intensity = getSunIntensity(day.ghi_cloudy_kwh, day.ghi_clear_kwh);
-                  const IconComponent = intensity.icon;
-                  
-                  return (
-                    <UITooltip key={day.date}>
-                      <TooltipTrigger asChild>
-                        <div className="flex flex-col items-center p-4 rounded-lg border border-border hover:bg-accent/5 transition-colors cursor-pointer">
-                          <p className="text-sm font-medium text-foreground mb-1">{dayName}</p>
-                          <p className="text-xs text-muted-foreground mb-3">{dateStr}</p>
-                          <IconComponent 
-                            className="h-12 w-12 mb-2 text-primary transition-all" 
-                            strokeWidth={2.5}
-                            fill={intensity.fill ? "currentColor" : "none"}
-                          />
-                          <p className="text-xs font-medium text-muted-foreground">{intensity.label}</p>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <div className="text-sm space-y-1">
-                          <p className="font-semibold">GHI: {day.ghi_cloudy_kwh.toFixed(1)} kWh/m²</p>
-                          <p className="text-xs text-muted-foreground">Clear sky: {day.ghi_clear_kwh.toFixed(1)} kWh/m²</p>
-                          <p className="text-xs text-muted-foreground">Quality: {intensity.label}</p>
-                        </div>
-                      </TooltipContent>
-                    </UITooltip>
-                  );
-                })}
-              </div>
-            </TooltipProvider>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
+              {data.days.map((day) => {
+                const date = new Date(day.date);
+                const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
+                const dateStr = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+                const intensity = getSunIntensity(day.ghi_cloudy_kwh, day.ghi_clear_kwh);
+                const IconComponent = intensity.icon;
+                
+                return (
+                  <div key={day.date} className="flex flex-col items-center p-4 rounded-lg border border-border">
+                    <p className="text-sm font-medium text-foreground mb-1">{dayName}</p>
+                    <p className="text-xs text-muted-foreground mb-3">{dateStr}</p>
+                    <IconComponent 
+                      className="h-12 w-12 mb-2 text-primary" 
+                      strokeWidth={2.5}
+                      fill={intensity.fill ? "currentColor" : "none"}
+                    />
+                    <p className="text-xs font-medium text-muted-foreground mb-2">{intensity.label}</p>
+                    <p className="text-xs font-semibold text-foreground">{day.ghi_cloudy_kwh.toFixed(1)} kWh/m²</p>
+                  </div>
+                );
+              })}
+            </div>
             {useMockData && (
               <p className="text-xs text-muted-foreground text-center italic mt-4">
                 Demo data based on last real London measurement.

@@ -7,16 +7,18 @@ interface SystemSpecsCardProps {
   systemSize: number;
   electricityRate: number;
   monthlyBill?: number;
+  panelEfficiency: number;
+  systemCost: number;
 }
 
 export const SystemSpecsCard = ({ 
   roofArea, 
   systemSize, 
   electricityRate, 
-  monthlyBill 
+  monthlyBill,
+  panelEfficiency,
+  systemCost
 }: SystemSpecsCardProps) => {
-  const estimatedCost = roofArea * 200;
-  const panelEfficiency = 18;
   
   return (
     <Card className="border-border bg-card/50 backdrop-blur">
@@ -56,12 +58,12 @@ export const SystemSpecsCard = ({
           </div>
           <div>
             <p className="text-muted-foreground">Electricity Rate</p>
-            <p className="font-semibold text-foreground">${electricityRate.toFixed(2)}/kWh</p>
+            <p className="font-semibold text-foreground">€{electricityRate.toFixed(2)}/kWh</p>
           </div>
           {monthlyBill && (
             <div>
               <p className="text-muted-foreground">Monthly Bill</p>
-              <p className="font-semibold text-foreground">${monthlyBill}</p>
+              <p className="font-semibold text-foreground">€{monthlyBill}</p>
             </div>
           )}
           <div>
@@ -70,11 +72,11 @@ export const SystemSpecsCard = ({
                 <TooltipTrigger asChild>
                   <div className="cursor-help">
                     <p className="text-muted-foreground">Est. System Cost</p>
-                    <p className="font-semibold text-foreground">${estimatedCost.toLocaleString()}</p>
+                    <p className="font-semibold text-foreground">€{systemCost.toLocaleString()}</p>
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p className="max-w-xs">Based on $200/m² industry average. Actual costs vary by location and installer.</p>
+                  <p className="max-w-xs">Based on €200/m² industry average. Actual costs vary by location and installer.</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

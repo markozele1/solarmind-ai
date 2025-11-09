@@ -84,7 +84,7 @@ export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData
       <AnimatedSolarBackground />
       <div className="max-w-3xl mx-auto text-center space-y-8 relative z-10">
         <div className="flex justify-center mb-6 animate-fade-in">
-          <div className="p-4 rounded-full bg-gradient-to-br from-primary to-solar-glow shadow-[0_0_40px_hsl(var(--solar-glow)/0.3)] animate-pulse">
+          <div className="p-4 rounded-full bg-gradient-to-br from-primary to-solar-glow shadow-[0_0_40px_hsl(var(--solar-glow)/0.3)] animate-[spin_8s_linear_infinite]">
             <Sun className="h-12 w-12 text-primary-foreground" />
           </div>
         </div>
@@ -163,7 +163,7 @@ export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData
             <p className="text-sm text-muted-foreground mb-4 text-left">Optional: For more accurate savings estimates</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2 text-left">
-                <Label htmlFor="monthlyBill">Monthly Electricity Bill ($)</Label>
+                <Label htmlFor="monthlyBill">Monthly Electricity Bill (€)</Label>
                 <Input
                   id="monthlyBill"
                   type="number"
@@ -176,7 +176,7 @@ export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData
                 />
               </div>
               <div className="space-y-2 text-left">
-                <Label htmlFor="electricityRate">Electricity Rate ($/kWh)</Label>
+                <Label htmlFor="electricityRate">Electricity Rate (€/kWh)</Label>
                 <Input
                   id="electricityRate"
                   type="number"

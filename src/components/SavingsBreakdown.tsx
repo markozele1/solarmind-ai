@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
 interface SavingsBreakdownProps {
   data: ForecastData;
-  electricityRate: number; // $/kWh
+  electricityRate: number; // €/kWh
 }
 
 export const SavingsBreakdown = ({ data, electricityRate }: SavingsBreakdownProps) => {
@@ -15,7 +15,7 @@ export const SavingsBreakdown = ({ data, electricityRate }: SavingsBreakdownProp
   const yearlySavings = dailySavings * 365;
   const twentyFiveYearSavings = yearlySavings * 25;
 
-  const estimatedSystemCost = data.roofArea * 200; // Rough estimate: $200/m²
+  const estimatedSystemCost = data.roofArea * 200; // Rough estimate: €200/m²
   const paybackYears = estimatedSystemCost / yearlySavings;
 
   const yearlyCO2 = data.today.co2Savings * 365;
@@ -31,7 +31,7 @@ export const SavingsBreakdown = ({ data, electricityRate }: SavingsBreakdownProp
               Your Savings Breakdown
             </CardTitle>
             <p className="text-sm text-muted-foreground mt-2">
-              Based on today's solar potential of {dailyEnergy.toFixed(1)} kWh and your electricity rate of ${electricityRate.toFixed(2)}/kWh
+              Based on today's solar potential of {dailyEnergy.toFixed(1)} kWh and your electricity rate of €{electricityRate.toFixed(2)}/kWh
             </p>
           </CardHeader>
           <CardContent>
@@ -45,19 +45,19 @@ export const SavingsBreakdown = ({ data, electricityRate }: SavingsBreakdownProp
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="text-center p-4 rounded-lg bg-muted/50">
                     <p className="text-sm text-muted-foreground mb-1">Daily</p>
-                    <p className="text-2xl font-bold text-accent">${dailySavings.toFixed(2)}</p>
+                    <p className="text-2xl font-bold text-accent">€{dailySavings.toFixed(2)}</p>
                   </div>
                   <div className="text-center p-4 rounded-lg bg-muted/50">
                     <p className="text-sm text-muted-foreground mb-1">Monthly</p>
-                    <p className="text-2xl font-bold text-accent">${monthlySavings.toFixed(0)}</p>
+                    <p className="text-2xl font-bold text-accent">€{monthlySavings.toFixed(0)}</p>
                   </div>
                   <div className="text-center p-4 rounded-lg bg-muted/50">
                     <p className="text-sm text-muted-foreground mb-1">Yearly</p>
-                    <p className="text-2xl font-bold text-accent">${yearlySavings.toFixed(0)}</p>
+                    <p className="text-2xl font-bold text-accent">€{yearlySavings.toFixed(0)}</p>
                   </div>
                   <div className="text-center p-4 rounded-lg bg-muted/50">
                     <p className="text-sm text-muted-foreground mb-1">25-Year Total</p>
-                    <p className="text-2xl font-bold text-accent">${twentyFiveYearSavings.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                    <p className="text-2xl font-bold text-accent">€{twentyFiveYearSavings.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
                   </div>
                 </div>
 
@@ -67,13 +67,13 @@ export const SavingsBreakdown = ({ data, electricityRate }: SavingsBreakdownProp
                     <p className="font-semibold text-foreground">Estimated Payback Period</p>
                     <p className="text-2xl font-bold text-primary">{paybackYears.toFixed(1)} years</p>
                     <p className="text-sm text-muted-foreground">
-                      Based on estimated system cost of ${estimatedSystemCost.toLocaleString()}
+                      Based on estimated system cost of €{estimatedSystemCost.toLocaleString()}
                     </p>
                   </div>
                 </div>
 
                 <p className="text-xs text-muted-foreground text-center">
-                  Calculations based on ${electricityRate.toFixed(2)}/kWh electricity rate. 
+                  Calculations based on €{electricityRate.toFixed(2)}/kWh electricity rate. 
                   Actual savings may vary based on your location, energy usage, and system specifications.
                 </p>
               </TabsContent>
@@ -97,12 +97,12 @@ export const SavingsBreakdown = ({ data, electricityRate }: SavingsBreakdownProp
                   <div className="flex items-start gap-3 p-4 rounded-lg bg-accent/5 border border-accent/20">
                     <span className="text-2xl">🚗</span>
                     <div className="flex-1">
-                      <p className="font-semibold text-foreground">Miles Not Driven</p>
+                      <p className="font-semibold text-foreground">Kilometers Not Driven</p>
                       <p className="text-lg text-accent font-bold">
-                        {(yearlyCO2 / 0.404).toLocaleString(undefined, { maximumFractionDigits: 0 })} miles/year
+                        {(yearlyCO2 / 0.251).toLocaleString(undefined, { maximumFractionDigits: 0 })} km/year
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        That's like driving from coast to coast {((yearlyCO2 / 0.404) / 3000).toFixed(1)} times!
+                        That's like driving across Europe {((yearlyCO2 / 0.251) / 5000).toFixed(1)} times!
                       </p>
                     </div>
                   </div>

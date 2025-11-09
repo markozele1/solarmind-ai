@@ -46,19 +46,29 @@ const Index = () => {
   const [currentSystemSize, setCurrentSystemSize] = useState(5);
   const [electricityRate, setElectricityRate] = useState(0.15);
   const [monthlyBill, setMonthlyBill] = useState(150);
+  const [panelEfficiency, setPanelEfficiency] = useState(20);
+  const [systemCost, setSystemCost] = useState(2000);
   const { toast } = useToast();
   const forecastRef = useRef<HTMLDivElement>(null);
 
-  // Load electricity rate and monthly bill from sessionStorage when forecast data is available
+  // Load settings from sessionStorage when forecast data is available
   useEffect(() => {
     if (forecastData) {
       const storedRate = sessionStorage.getItem('electricityRate');
       const storedBill = sessionStorage.getItem('monthlyBill');
+      const storedEfficiency = sessionStorage.getItem('panelEfficiency');
+      const storedCost = sessionStorage.getItem('systemCost');
       if (storedRate) {
         setElectricityRate(parseFloat(storedRate));
       }
       if (storedBill) {
         setMonthlyBill(parseFloat(storedBill));
+      }
+      if (storedEfficiency) {
+        setPanelEfficiency(parseFloat(storedEfficiency));
+      }
+      if (storedCost) {
+        setSystemCost(parseFloat(storedCost));
       }
     }
   }, [forecastData]);
@@ -154,6 +164,8 @@ const Index = () => {
             currentSystemSize={currentSystemSize}
             currentMonthlyBill={monthlyBill}
             currentElectricityRate={electricityRate}
+            currentPanelEfficiency={panelEfficiency}
+            currentSystemCost={systemCost}
           />
           <div className="container mx-auto px-4 py-6">
             <SystemSpecsCard 
@@ -161,6 +173,8 @@ const Index = () => {
               systemSize={currentSystemSize}
               electricityRate={electricityRate}
               monthlyBill={monthlyBill}
+              panelEfficiency={panelEfficiency}
+              systemCost={systemCost}
             />
           </div>
           <SavingsBreakdown data={forecastData} electricityRate={electricityRate} />

@@ -74,11 +74,11 @@ export const getCO2Analogies = (co2Kg: number): EnergyAnalogy[] => {
     icon: "🌳"
   });
 
-  // Miles driven analogy
-  const miles = (co2Kg / 0.404).toFixed(0); // Average car emits ~0.404 kg CO2/mile
-  if (parseFloat(miles) > 0) {
+  // Kilometers driven analogy
+  const km = (co2Kg / 0.251).toFixed(0); // Average car emits ~0.251 kg CO2/km
+  if (parseFloat(km) > 0) {
     analogies.push({
-      text: `Same as not driving ${miles} miles`,
+      text: `Same as not driving ${km} km`,
       icon: "🚗"
     });
   }
