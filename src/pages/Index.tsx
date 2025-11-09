@@ -126,6 +126,37 @@ const Index = () => {
     setCurrentSystemSize(systemSize);
     setPanelEfficiency(panelEfficiency);
     setSystemCost(systemCost);
+
+    // Recalculate forecast data with new parameters
+    if (forecastData) {
+      const recalculatedDays = forecastData.days.map(day => {
+        const estimatedEnergy = roofArea * (panelEfficiency / 100) * day.ghi_clear_kwh;
+        const co2Savings = estimatedEnergy * 0.45;
+        
+        return {
+          ...day,
+          estimatedEnergy,
+          co2Savings,
+        };
+      });
+
+      const todayData = recalculatedDays[0];
+      
+      setForecastData({
+        ...forecastData,
+        roofArea,
+        days: recalculatedDays,
+        today: {
+          sunlightQuality: todayData.sunlightQuality,
+          peakSunHours: todayData.peakSunHours,
+          estimatedEnergy: todayData.estimatedEnergy,
+          co2Savings: todayData.co2Savings,
+          sunrise: todayData.sunrise,
+          sunset: todayData.sunset,
+        },
+      });
+    }
+
     toast({
       title: "Settings updated",
       description: "Your home parameters have been updated",
