@@ -1,15 +1,18 @@
 import { useState } from "react";
-import { Sun } from "lucide-react";
+import { Sun, Database } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { Switch } from "./ui/switch";
 
 interface HeroSectionProps {
   onSubmit: (city: string, roofArea: number, systemSize: number) => void;
   isLoading: boolean;
+  useMockData: boolean;
+  onToggleMockData: (value: boolean) => void;
 }
 
-export const HeroSection = ({ onSubmit, isLoading }: HeroSectionProps) => {
+export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData }: HeroSectionProps) => {
   const [city, setCity] = useState("");
   const [roofArea, setRoofArea] = useState("10");
   const [systemSize, setSystemSize] = useState("5");
@@ -39,6 +42,25 @@ export const HeroSection = ({ onSubmit, isLoading }: HeroSectionProps) => {
         </p>
 
         <form onSubmit={handleSubmit} className="bg-card rounded-2xl shadow-[var(--shadow-card)] p-8 space-y-6 border border-border">
+          <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50 border border-border">
+            <div className="flex items-center gap-3">
+              <Database className="h-5 w-5 text-muted-foreground" />
+              <div className="text-left">
+                <Label htmlFor="data-mode" className="text-sm font-semibold">
+                  {useMockData ? "Mock Data" : "Live API Data"}
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  {useMockData ? "Using cached Zagreb data" : "Fetching from OpenWeather API"}
+                </p>
+              </div>
+            </div>
+            <Switch
+              id="data-mode"
+              checked={!useMockData}
+              onCheckedChange={(checked) => onToggleMockData(!checked)}
+            />
+          </div>
+
           <div className="space-y-2 text-left">
             <Label htmlFor="city">City</Label>
             <Input

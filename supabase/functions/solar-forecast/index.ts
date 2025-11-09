@@ -69,12 +69,87 @@ serve(async (req) => {
   }
 
   try {
-    const { city, roofArea = 10 } = await req.json();
+    const { city, roofArea = 10, useMockData = true } = await req.json();
     
-    console.log(`Using cached data for: ${city}, roofArea: ${roofArea}m²`);
+    console.log(`Using ${useMockData ? 'cached' : 'live'} data for: ${city}, roofArea: ${roofArea}m²`);
 
-    // Process cached data with new calculations
-    const processedDays = CACHED_ZAGREB_DATA.days.map(day => {
+    let forecastData;
+    
+    if (useMockData) {
+      // Use cached Zagreb data
+      forecastData = CACHED_ZAGREB_DATA;
+    } else {
+      // Fetch live data from OpenWeather API
+      const apiKey = Deno.env.get('OPENWEATHER_API_KEY');
+      if (!apiKey) {
+        throw new Error('OpenWeather API key not configured');
+      }
+
+      // Get coordinates for the city
+      const geoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(city)}&limit=1&appid=${apiKey}`;
+      const geoResponse = await fetch(geoUrl);
+      const geoData = await geoResponse.json();
+      
+      if (!geoData || geoData.length === 0) {
+        throw new Error('City not found');
+      }
+
+      const { lat, lon, name, country } = geoData[0];
+
+      // Get 5-day forecast for sunrise/sunset times
+      const weatherUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+      const weatherResponse = await fetch(weatherUrl);
+      const weatherData = await weatherResponse.json();
+
+      if (!weatherData || !weatherData.list) {
+        throw new Error('Weather data not available');
+      }
+
+      // Generate 7 days of data from forecast
+      const now = new Date();
+      const days = [];
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(now);
+        date.setDate(date.getDate() + i);
+        const dateStr = date.toISOString().split('T')[0];
+        
+        // Find forecast entries for this day
+        const dayForecasts = weatherData.list.filter((item: any) => {
+          const itemDate = new Date(item.dt * 1000).toISOString().split('T')[0];
+          return itemDate === dateStr;
+        });
+
+        // Calculate average GHI estimate based on cloud cover
+        let avgGhi = 0;
+        if (dayForecasts.length > 0) {
+          avgGhi = dayForecasts.reduce((sum: number, item: any) => {
+            const clouds = item.clouds?.all || 50;
+            const estimatedGhi = 1000 * (1 - clouds / 200); // Rough estimate
+            return sum + estimatedGhi;
+          }, 0) / dayForecasts.length;
+        } else {
+          avgGhi = 800; // Default fallback
+        }
+
+        days.push({
+          date: dateStr,
+          ghi_clear_wh: Math.round(avgGhi),
+          ghi_cloudy_wh: Math.round(avgGhi * 0.7),
+          sunrise: "06:00", // Simplified - real API would need separate call
+          sunset: "18:00"
+        });
+      }
+
+      forecastData = {
+        location: `${name}, ${country}`,
+        lat,
+        lon,
+        days
+      };
+    }
+    
+    // Process forecast data (works for both mock and live)
+    const processedDays = forecastData.days.map(day => {
       // Convert Wh/m² → kWh/m²
       const ghiClearKwh = day.ghi_clear_wh / 1000;
       const ghiCloudyKwh = day.ghi_cloudy_wh / 1000;
@@ -108,9 +183,9 @@ serve(async (req) => {
     const today = processedDays[0];
 
     const result = {
-      location: CACHED_ZAGREB_DATA.location,
-      lat: CACHED_ZAGREB_DATA.lat,
-      lon: CACHED_ZAGREB_DATA.lon,
+      location: forecastData.location,
+      lat: forecastData.lat,
+      lon: forecastData.lon,
       days: processedDays,
       today: {
         sunlightQuality: today.sunlightQuality,
@@ -123,7 +198,7 @@ serve(async (req) => {
       roofArea
     };
 
-    console.log("Forecast generated from cached data:", result);
+    console.log(`Forecast generated from ${useMockData ? 'cached' : 'live'} data:`, result);
 
     return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

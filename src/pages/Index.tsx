@@ -35,18 +35,35 @@ export interface ForecastData {
 const Index = () => {
   const [forecastData, setForecastData] = useState<ForecastData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [useMockData, setUseMockData] = useState(true);
+  const [lastForecastTime, setLastForecastTime] = useState<number>(0);
+  const [lastRefreshTime, setLastRefreshTime] = useState<number>(0);
   const { toast } = useToast();
 
   const handleGetForecast = async (city: string, roofArea: number, systemSize: number) => {
+    const now = Date.now();
+    const timeSinceLastForecast = now - lastForecastTime;
+    
+    if (timeSinceLastForecast < 60000) {
+      const remainingSeconds = Math.ceil((60000 - timeSinceLastForecast) / 1000);
+      toast({
+        title: "Rate limit",
+        description: `Please wait ${remainingSeconds}s before requesting forecast`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("solar-forecast", {
-        body: { city, roofArea, systemSize },
+        body: { city, roofArea, systemSize, useMockData },
       });
 
       if (error) throw error;
 
       setForecastData(data);
+      setLastForecastTime(now);
       toast({
         title: "Forecast loaded successfully",
         description: `Solar data for ${data.location} is ready`,
@@ -63,19 +80,33 @@ const Index = () => {
   };
 
   const handleRefresh = () => {
-    if (forecastData) {
+    const now = Date.now();
+    const timeSinceLastRefresh = now - lastRefreshTime;
+    
+    if (timeSinceLastRefresh < 60000) {
+      const remainingSeconds = Math.ceil((60000 - timeSinceLastRefresh) / 1000);
       toast({
-        title: "Using cached data",
-        description: "Displaying demo data based on last real Zagreb measurement",
+        title: "Rate limit",
+        description: `Please wait ${remainingSeconds}s before refreshing`,
+        variant: "destructive",
       });
-      // Re-fetch with same parameters (uses cached data)
+      return;
+    }
+
+    if (forecastData) {
+      setLastRefreshTime(now);
       handleGetForecast(forecastData.location, forecastData.roofArea, 5);
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-blue to-background">
-      <HeroSection onSubmit={handleGetForecast} isLoading={isLoading} />
+      <HeroSection 
+        onSubmit={handleGetForecast} 
+        isLoading={isLoading}
+        useMockData={useMockData}
+        onToggleMockData={setUseMockData}
+      />
       
       {forecastData && (
         <>
