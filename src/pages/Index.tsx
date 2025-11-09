@@ -3,6 +3,8 @@ import { HeroSection } from "@/components/HeroSection";
 import { ForecastDashboard } from "@/components/ForecastDashboard";
 import { AISummary } from "@/components/AISummary";
 import { ChatSection } from "@/components/ChatSection";
+import { SavingsBreakdown } from "@/components/SavingsBreakdown";
+import { SolarFAQ } from "@/components/SolarFAQ";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -41,8 +43,19 @@ const Index = () => {
   const [currentCity, setCurrentCity] = useState("London");
   const [currentRoofArea, setCurrentRoofArea] = useState(10);
   const [currentSystemSize, setCurrentSystemSize] = useState(5);
+  const [electricityRate, setElectricityRate] = useState(0.15);
   const { toast } = useToast();
   const forecastRef = useRef<HTMLDivElement>(null);
+
+  // Load electricity rate from sessionStorage when forecast data is available
+  useEffect(() => {
+    if (forecastData) {
+      const storedRate = sessionStorage.getItem('electricityRate');
+      if (storedRate) {
+        setElectricityRate(parseFloat(storedRate));
+      }
+    }
+  }, [forecastData]);
 
   useEffect(() => {
     if (forecastData && forecastRef.current) {
@@ -134,7 +147,9 @@ const Index = () => {
             currentRoofArea={currentRoofArea}
             currentSystemSize={currentSystemSize}
           />
+          <SavingsBreakdown data={forecastData} electricityRate={electricityRate} />
           <AISummary data={forecastData} />
+          <SolarFAQ data={forecastData} electricityRate={electricityRate} />
           <ChatSection />
         </div>
       )}

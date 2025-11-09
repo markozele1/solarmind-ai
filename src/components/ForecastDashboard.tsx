@@ -2,9 +2,10 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { ForecastData } from "@/pages/Index";
-import { Sun, CloudSun, Cloud, CloudDrizzle, Sunrise, Sunset, RefreshCw, Settings, LucideIcon } from "lucide-react";
+import { Sun, CloudSun, Cloud, CloudDrizzle, Sunrise, Sunset, RefreshCw, Settings, LucideIcon, Lightbulb } from "lucide-react";
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { SettingsDialog } from "./SettingsDialog";
+import { getEnergyAnalogies, getCO2Analogies, getHouseholdComparison } from "@/lib/energyAnalogies";
 
 interface ForecastDashboardProps {
   data: ForecastData;
@@ -39,6 +40,10 @@ export const ForecastDashboard = ({
     if (percentage >= 20) return { icon: Cloud, label: "Fair", fill: false };
     return { icon: CloudDrizzle, label: "Poor", fill: false };
   };
+
+  const energyAnalogies = getEnergyAnalogies(data.today.estimatedEnergy);
+  const co2Analogies = getCO2Analogies(data.today.co2Savings);
+  const householdComparison = getHouseholdComparison(data.today.estimatedEnergy);
 
   return (
     <section className="container mx-auto px-4 py-8">
@@ -81,26 +86,66 @@ export const ForecastDashboard = ({
               Today's Solar Potential
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Sunlight Quality</p>
-                <p className="text-2xl font-bold text-primary">{data.today.sunlightQuality.toFixed(1)}%</p>
-                <p className="text-xs text-muted-foreground">of clear-sky potential</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Peak Sun Hours</p>
-                <p className="text-2xl font-bold">{data.today.peakSunHours.toFixed(1)} h</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Energy Output</p>
-                <p className="text-2xl font-bold">{data.today.estimatedEnergy.toFixed(1)} kWh</p>
-                <p className="text-xs text-muted-foreground">for {data.roofArea} m² roof, 20% efficiency</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">CO₂ Avoided</p>
-                <p className="text-2xl font-bold text-accent">{data.today.co2Savings.toFixed(1)} kg</p>
-              </div>
+              <TooltipProvider>
+                <UITooltip>
+                  <TooltipTrigger asChild>
+                    <div className="cursor-help">
+                      <p className="text-sm text-muted-foreground">Sunlight Quality</p>
+                      <p className="text-2xl font-bold text-primary">{data.today.sunlightQuality.toFixed(1)}%</p>
+                      <p className="text-xs text-muted-foreground">of clear-sky potential</p>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">The percentage of maximum possible solar irradiance reaching your panels today, accounting for cloud cover and atmospheric conditions.</p>
+                  </TooltipContent>
+                </UITooltip>
+              </TooltipProvider>
+
+              <TooltipProvider>
+                <UITooltip>
+                  <TooltipTrigger asChild>
+                    <div className="cursor-help">
+                      <p className="text-sm text-muted-foreground">Peak Sun Hours</p>
+                      <p className="text-2xl font-bold">{data.today.peakSunHours.toFixed(1)} h</p>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">Hours of maximum solar intensity (1000 W/m²) your panels receive. This is the industry standard for comparing solar potential.</p>
+                  </TooltipContent>
+                </UITooltip>
+              </TooltipProvider>
+
+              <TooltipProvider>
+                <UITooltip>
+                  <TooltipTrigger asChild>
+                    <div className="cursor-help">
+                      <p className="text-sm text-muted-foreground">Energy Output</p>
+                      <p className="text-2xl font-bold">{data.today.estimatedEnergy.toFixed(1)} kWh</p>
+                      <p className="text-xs text-muted-foreground">for {data.roofArea} m² roof, 20% efficiency</p>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">Kilowatt-hour (kWh): The amount of energy used by a 1000-watt appliance running for 1 hour. Your expected daily solar energy generation.</p>
+                  </TooltipContent>
+                </UITooltip>
+              </TooltipProvider>
+
+              <TooltipProvider>
+                <UITooltip>
+                  <TooltipTrigger asChild>
+                    <div className="cursor-help">
+                      <p className="text-sm text-muted-foreground">CO₂ Avoided</p>
+                      <p className="text-2xl font-bold text-accent">{data.today.co2Savings.toFixed(1)} kg</p>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">Carbon dioxide emissions prevented by using solar energy instead of grid electricity (typically from fossil fuels).</p>
+                  </TooltipContent>
+                </UITooltip>
+              </TooltipProvider>
+
               <div>
                 <p className="text-sm text-muted-foreground">Sunrise</p>
                 <p className="text-xl font-bold flex items-center gap-1">
@@ -114,6 +159,44 @@ export const ForecastDashboard = ({
                   <Sunset className="h-4 w-4" />
                   {data.today.sunset}
                 </p>
+              </div>
+            </div>
+
+            {/* What This Means For You Section */}
+            <div className="pt-4 border-t border-border">
+              <div className="flex items-center gap-2 mb-4">
+                <Lightbulb className="h-5 w-5 text-accent" />
+                <h3 className="text-lg font-semibold">What This Means For You</h3>
+              </div>
+              
+              <div className="space-y-4">
+                {/* Household Comparison */}
+                <div className="p-4 rounded-lg bg-accent/10 border border-accent/20">
+                  <p className="text-base font-medium text-foreground">{householdComparison}</p>
+                </div>
+
+                {/* Energy Analogies */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {energyAnalogies.map((analogy, index) => (
+                    <div key={index} className="flex items-start gap-2 p-3 rounded-lg bg-muted/50">
+                      <span className="text-2xl">{analogy.icon}</span>
+                      <p className="text-sm text-foreground pt-1">{analogy.text}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* CO2 Analogies */}
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-muted-foreground">Environmental Impact:</p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {co2Analogies.map((analogy, index) => (
+                      <div key={index} className="flex items-start gap-2 p-3 rounded-lg bg-accent/5 border border-accent/20">
+                        <span className="text-2xl">{analogy.icon}</span>
+                        <p className="text-sm text-foreground pt-1">{analogy.text}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>

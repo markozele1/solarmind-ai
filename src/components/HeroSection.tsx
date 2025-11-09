@@ -26,6 +26,8 @@ export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData
   const [systemSize, setSystemSize] = useState("5");
   const [roofAreaError, setRoofAreaError] = useState<string | null>(null);
   const [systemSizeError, setSystemSizeError] = useState<string | null>(null);
+  const [monthlyBill, setMonthlyBill] = useState("150");
+  const [electricityRate, setElectricityRate] = useState("0.15");
 
   const validateRoofArea = (value: string) => {
     const num = parseFloat(value);
@@ -64,6 +66,9 @@ export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData
     const isSystemSizeValid = validateSystemSize(systemSize);
     
     if (selectedCity && isRoofAreaValid && isSystemSizeValid) {
+      // Store additional data in sessionStorage for use in other components
+      sessionStorage.setItem('monthlyBill', monthlyBill);
+      sessionStorage.setItem('electricityRate', electricityRate);
       onSubmit(selectedCity.name, parseFloat(roofArea), parseFloat(systemSize));
     }
   };
@@ -150,6 +155,39 @@ export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData
               {systemSizeError && (
                 <p className="text-sm text-destructive">{systemSizeError}</p>
               )}
+            </div>
+          </div>
+
+          {/* Optional Fields for Better Estimates */}
+          <div className="pt-4 border-t border-border">
+            <p className="text-sm text-muted-foreground mb-4 text-left">Optional: For more accurate savings estimates</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2 text-left">
+                <Label htmlFor="monthlyBill">Monthly Electricity Bill ($)</Label>
+                <Input
+                  id="monthlyBill"
+                  type="number"
+                  min={0}
+                  step={10}
+                  value={monthlyBill}
+                  onChange={(e) => setMonthlyBill(e.target.value)}
+                  placeholder="150"
+                  className="h-12 text-base"
+                />
+              </div>
+              <div className="space-y-2 text-left">
+                <Label htmlFor="electricityRate">Electricity Rate ($/kWh)</Label>
+                <Input
+                  id="electricityRate"
+                  type="number"
+                  min={0}
+                  step={0.01}
+                  value={electricityRate}
+                  onChange={(e) => setElectricityRate(e.target.value)}
+                  placeholder="0.15"
+                  className="h-12 text-base"
+                />
+              </div>
             </div>
           </div>
 

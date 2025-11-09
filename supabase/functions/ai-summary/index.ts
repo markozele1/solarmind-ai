@@ -21,18 +21,27 @@ serve(async (req) => {
 
     console.log("Generating AI summary for:", city);
 
-    const prompt = `Solar Data Summary:
-City: ${city}
-Date: ${date}
-Clear-sky GHI: ${clear_ghi_kwh_m2} kWh/m²
-Cloudy-sky GHI: ${cloudy_ghi_kwh_m2} kWh/m²
-Sunlight Quality: ${sunlight_quality_pct}% of clear-sky potential
-Peak Sun Hours: ${peak_sun_hours} hours
-Estimated Energy Output: ${energy_kwh} kWh
-CO₂ Savings: ${co2_saved_kg} kg
-Sunrise: ${sunrise}, Sunset: ${sunset}
+    const avgHouseholdDailyUse = 30; // kWh per day
+    const householdHours = ((energy_kwh / avgHouseholdDailyUse) * 24).toFixed(1);
+    const monthlyValue = (energy_kwh * 0.15 * 30).toFixed(0); // Assuming $0.15/kWh
+    const yearlyValue = (energy_kwh * 0.15 * 365).toFixed(0);
 
-Explain this solar data in 2-3 sentences for a non-technical reader. Mention today's sunlight quality, estimated energy output, and CO₂ savings.`;
+    const prompt = `You are a solar energy advisor helping homeowners understand their solar investment potential in simple, relatable terms.
+
+Based on this data for ${city} on ${date}:
+- Energy output: ${energy_kwh} kWh today
+- CO₂ savings: ${co2_saved_kg} kg today
+- Sunlight quality: ${sunlight_quality_pct}% of clear-sky potential
+- Peak sun hours: ${peak_sun_hours} hours
+- Sunrise: ${sunrise}, Sunset: ${sunset}
+
+Write a compelling 3-4 sentence insight that:
+1. Interprets what ${energy_kwh} kWh means for a homeowner's daily life (hint: average home uses ${avgHouseholdDailyUse} kWh/day, so this can power a home for ${householdHours} hours)
+2. Translates the environmental impact into something meaningful (${co2_saved_kg} kg CO₂ saved)
+3. Explains the financial value - estimated $${monthlyValue}/month or $${yearlyValue}/year in electricity savings (at $0.15/kWh)
+4. Provides actionable insight: is this a good solar day? What does this mean for their investment?
+
+Make it conversational, encouraging, and focused on "what this means for YOUR wallet and the planet." Avoid just listing numbers - interpret them. Use relatable comparisons when possible.`;
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -45,14 +54,14 @@ Explain this solar data in 2-3 sentences for a non-technical reader. Mention tod
         messages: [
           {
             role: "system",
-            content: "You are SolarMind, an AI assistant that explains solar energy data in simple, encouraging terms.",
+            content: "You are SolarMind, a friendly solar energy advisor who helps homeowners understand the real-world value of solar energy. You translate technical data into meaningful insights about savings, environmental impact, and smart investment decisions. Always be encouraging and focus on practical benefits.",
           },
           {
             role: "user",
             content: prompt,
           },
         ],
-        max_tokens: 200,
+        max_tokens: 300,
       }),
     });
 
