@@ -13,122 +13,155 @@ export const AnimatedSolarBackground = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-      {/* Radial gradient base */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-sky-blue/20 to-background" />
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+      {/* Subtle radial gradient base */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-sky-blue/10 to-background" />
       
-      {/* Parallax Sun */}
+      {/* Animated Sun with glow - parallax effect */}
       <div 
-        className="absolute w-64 h-64 rounded-full blur-2xl opacity-40"
+        className="absolute w-48 h-48 rounded-full opacity-30 transition-transform duration-75"
         style={{
-          top: `${20 + scrollY * 0.3}px`,
-          right: `${15}%`,
+          top: `${15 + scrollY * 0.2}%`,
+          right: '10%',
           background: `radial-gradient(circle, hsl(var(--solar-glow)), hsl(var(--primary)) 40%, transparent 70%)`,
-          transform: `translateY(${scrollY * 0.15}px) scale(${1 + scrollY * 0.0002})`,
+          transform: `translateY(${scrollY * 0.1}px)`,
+          boxShadow: `0 0 80px 20px hsl(var(--solar-glow) / 0.3)`,
         }}
       />
       
       {/* Sun core */}
       <div 
-        className="absolute w-32 h-32 rounded-full opacity-60"
+        className="absolute w-24 h-24 rounded-full opacity-40"
         style={{
-          top: `${84 + scrollY * 0.3}px`,
-          right: `calc(15% + 64px)`,
-          background: `radial-gradient(circle, hsl(var(--solar-glow) / 0.8), hsl(var(--primary) / 0.5) 50%, transparent 70%)`,
-          transform: `translateY(${scrollY * 0.15}px)`,
-          boxShadow: `0 0 60px hsl(var(--solar-glow) / 0.4)`,
+          top: `calc(${15 + scrollY * 0.2}% + 48px)`,
+          right: 'calc(10% + 48px)',
+          background: `radial-gradient(circle, hsl(var(--solar-glow) / 0.9), hsl(var(--primary) / 0.6) 50%, transparent 70%)`,
+          transform: `translateY(${scrollY * 0.1}px)`,
         }}
       />
 
-      {/* Parallax Clouds */}
+      {/* Parallax Clouds - moving gently on scroll */}
       <div 
-        className="absolute w-96 h-32 opacity-20"
+        className="absolute w-80 h-24 opacity-15 transition-transform duration-100"
         style={{
-          top: `${100 + scrollY * 0.5}px`,
-          left: `10%`,
-          transform: `translateY(${scrollY * 0.25}px)`,
+          top: `${8 + scrollY * 0.15}%`,
+          left: '8%',
+          transform: `translateY(${scrollY * 0.08}px)`,
         }}
       >
         <svg viewBox="0 0 200 60" className="w-full h-full">
-          <ellipse cx="50" cy="30" rx="40" ry="25" fill="hsl(var(--muted-foreground))" opacity="0.3" />
-          <ellipse cx="80" cy="25" rx="35" ry="20" fill="hsl(var(--muted-foreground))" opacity="0.4" />
-          <ellipse cx="110" cy="30" rx="40" ry="25" fill="hsl(var(--muted-foreground))" opacity="0.3" />
+          <ellipse cx="50" cy="30" rx="40" ry="20" fill="hsl(var(--muted-foreground))" opacity="0.4" />
+          <ellipse cx="80" cy="25" rx="35" ry="18" fill="hsl(var(--muted-foreground))" opacity="0.5" />
+          <ellipse cx="110" cy="30" rx="40" ry="20" fill="hsl(var(--muted-foreground))" opacity="0.4" />
         </svg>
       </div>
 
       <div 
-        className="absolute w-80 h-28 opacity-15"
+        className="absolute w-72 h-20 opacity-12 transition-transform duration-100"
         style={{
-          top: `${250 + scrollY * 0.4}px`,
-          right: `25%`,
-          transform: `translateY(${scrollY * 0.2}px)`,
+          top: `${25 + scrollY * 0.25}%`,
+          right: '20%',
+          transform: `translateY(${scrollY * 0.12}px)`,
         }}
       >
         <svg viewBox="0 0 200 60" className="w-full h-full">
-          <ellipse cx="60" cy="30" rx="45" ry="25" fill="hsl(var(--muted-foreground))" opacity="0.4" />
-          <ellipse cx="100" cy="25" rx="40" ry="22" fill="hsl(var(--muted-foreground))" opacity="0.5" />
-          <ellipse cx="130" cy="32" rx="35" ry="20" fill="hsl(var(--muted-foreground))" opacity="0.3" />
+          <ellipse cx="60" cy="28" rx="42" ry="22" fill="hsl(var(--muted-foreground))" opacity="0.5" />
+          <ellipse cx="100" cy="24" rx="38" ry="20" fill="hsl(var(--muted-foreground))" opacity="0.6" />
+          <ellipse cx="130" cy="30" rx="35" ry="18" fill="hsl(var(--muted-foreground))" opacity="0.4" />
         </svg>
       </div>
 
       <div 
-        className="absolute w-72 h-24 opacity-25"
+        className="absolute w-64 h-20 opacity-10 transition-transform duration-100"
         style={{
-          top: `${450 + scrollY * 0.6}px`,
-          left: `30%`,
-          transform: `translateY(${scrollY * 0.35}px)`,
+          top: `${40 + scrollY * 0.18}%`,
+          left: '25%',
+          transform: `translateY(${scrollY * 0.09}px)`,
         }}
       >
         <svg viewBox="0 0 200 60" className="w-full h-full">
-          <ellipse cx="55" cy="28" rx="38" ry="22" fill="hsl(var(--muted-foreground))" opacity="0.3" />
-          <ellipse cx="90" cy="30" rx="42" ry="24" fill="hsl(var(--muted-foreground))" opacity="0.4" />
-          <ellipse cx="120" cy="26" rx="35" ry="20" fill="hsl(var(--muted-foreground))" opacity="0.35" />
+          <ellipse cx="55" cy="26" rx="36" ry="20" fill="hsl(var(--muted-foreground))" opacity="0.4" />
+          <ellipse cx="90" cy="28" rx="40" ry="22" fill="hsl(var(--muted-foreground))" opacity="0.5" />
+          <ellipse cx="120" cy="24" rx="33" ry="18" fill="hsl(var(--muted-foreground))" opacity="0.35" />
         </svg>
       </div>
-      
-      {/* Animated sun rays */}
-      <div 
-        className="absolute w-[800px] h-[800px] opacity-20"
-        style={{
-          top: `${-200 + scrollY * 0.3}px`,
-          right: `calc(15% - 200px)`,
-          transform: `translateY(${scrollY * 0.15}px)`,
-        }}
-      >
-        <div className="absolute inset-0 animate-[spin_60s_linear_infinite]">
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute top-1/2 left-1/2 w-1 h-full origin-bottom"
-              style={{
-                transform: `rotate(${i * 45}deg)`,
-                background: `linear-gradient(to top, transparent, hsl(var(--solar-glow) / 0.2), transparent)`,
-              }}
-            />
-          ))}
-        </div>
-      </div>
 
-      {/* Floating orbs representing solar particles */}
+      {/* Floating orbs for depth */}
       <div className="solar-orb solar-orb-1" />
       <div className="solar-orb solar-orb-2" />
       <div className="solar-orb solar-orb-3" />
-      <div className="solar-orb solar-orb-4" />
-      <div className="solar-orb solar-orb-5" />
       
-      {/* Gentle wave overlay */}
-      <svg
-        className="absolute bottom-0 left-0 w-full h-64 opacity-20"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 1440 320"
-        preserveAspectRatio="none"
-      >
-        <path
-          fill="hsl(var(--primary) / 0.1)"
-          d="M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,133.3C672,117,768,107,864,122.7C960,139,1056,181,1152,181.3C1248,181,1344,139,1392,117.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-          className="animate-[wave_15s_ease-in-out_infinite]"
-        />
-      </svg>
+      {/* 3D Grass at bottom - multiple layers for depth */}
+      <div className="absolute bottom-0 left-0 w-full h-32 md:h-40">
+        {/* Back grass layer - darker, smaller */}
+        <div 
+          className="absolute bottom-0 left-0 w-full h-24 md:h-32"
+          style={{
+            background: `linear-gradient(to top, hsl(142 40% 35%), transparent)`,
+            opacity: 0.3,
+          }}
+        >
+          <svg className="absolute bottom-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1200 100">
+            {[...Array(80)].map((_, i) => (
+              <path
+                key={`back-${i}`}
+                d={`M${i * 15},100 Q${i * 15 + 1},${85 - Math.random() * 15} ${i * 15 + 2},100`}
+                fill="hsl(142 35% 30%)"
+                opacity={0.4 + Math.random() * 0.2}
+                style={{
+                  animation: `sway ${3 + Math.random() * 2}s ease-in-out infinite ${Math.random() * 2}s`,
+                }}
+              />
+            ))}
+          </svg>
+        </div>
+
+        {/* Middle grass layer */}
+        <div 
+          className="absolute bottom-0 left-0 w-full h-20 md:h-28"
+          style={{
+            background: `linear-gradient(to top, hsl(142 50% 40%), transparent)`,
+            opacity: 0.5,
+          }}
+        >
+          <svg className="absolute bottom-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1200 100">
+            {[...Array(60)].map((_, i) => (
+              <path
+                key={`mid-${i}`}
+                d={`M${i * 20},100 Q${i * 20 + 2},${75 - Math.random() * 20} ${i * 20 + 4},100`}
+                fill="hsl(142 45% 38%)"
+                opacity={0.5 + Math.random() * 0.2}
+                style={{
+                  animation: `sway ${2.5 + Math.random() * 1.5}s ease-in-out infinite ${Math.random() * 1.5}s`,
+                }}
+              />
+            ))}
+          </svg>
+        </div>
+
+        {/* Front grass layer - brightest, tallest */}
+        <div 
+          className="absolute bottom-0 left-0 w-full h-16 md:h-24"
+          style={{
+            background: `linear-gradient(to top, hsl(142 60% 45%), transparent)`,
+            opacity: 0.7,
+          }}
+        >
+          <svg className="absolute bottom-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1200 100">
+            {[...Array(50)].map((_, i) => (
+              <path
+                key={`front-${i}`}
+                d={`M${i * 24},100 Q${i * 24 + 3},${60 - Math.random() * 25} ${i * 24 + 6},100`}
+                fill="hsl(142 55% 42%)"
+                opacity={0.6 + Math.random() * 0.3}
+                style={{
+                  animation: `sway ${2 + Math.random() * 1}s ease-in-out infinite ${Math.random() * 1}s`,
+                }}
+              />
+            ))}
+          </svg>
+        </div>
+      </div>
     </div>
   );
 };
