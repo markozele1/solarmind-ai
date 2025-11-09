@@ -152,7 +152,7 @@ Unlike generic solar calculators that provide static estimates, SolarMind combin
 ## 📹 Demo & Resources
 
 ### **Video Demo**
-🎥 [Watch 3-Minute Demo Video](https://drive.google.com/file/d/1KjtAIdA5DvKJgOjsJsuuJm7FIOvf5Bfp/view?usp=sharing) *(Link to your demo)*
+🎥 [Watch 3-Minute Demo Video](https://drive.google.com/file/d/1KjtAIdA5DvKJgOjsJsuuJm7FIOvf5Bfp/view?usp=sharing) 
 
 ### **Live Application**
 🌐 **[Try SolarMind Live](https://solarmind-ai.lovable.app/)**
