@@ -13,13 +13,13 @@ export const AnimatedSolarBackground = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
       {/* Radial gradient base */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-sky-blue/20 to-background" />
       
       {/* Enhanced Animated Sun */}
       <div 
-        className="absolute w-80 h-80 rounded-full blur-3xl opacity-50 animate-pulse"
+        className="absolute w-80 h-80 rounded-full blur-3xl opacity-60 animate-pulse"
         style={{
           top: `${20 + scrollY * 0.3}px`,
           right: `${12}%`,
