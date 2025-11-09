@@ -1,15 +1,36 @@
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { ForecastData } from "@/pages/Index";
-import { Sun, Sunrise, Sunset, Zap, Leaf, RefreshCw } from "lucide-react";
+import { Sun, Sunrise, Sunset, RefreshCw, Settings } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { SettingsDialog } from "./SettingsDialog";
 
 interface ForecastDashboardProps {
   data: ForecastData;
   onRefresh: () => void;
+  onUpdateSettings: (city: string, roofArea: number, systemSize: number) => void;
+  isLoading: boolean;
+  useMockData: boolean;
+  onToggleMockData: (value: boolean) => void;
+  currentCity: string;
+  currentRoofArea: number;
+  currentSystemSize: number;
 }
 
-export const ForecastDashboard = ({ data, onRefresh }: ForecastDashboardProps) => {
+export const ForecastDashboard = ({ 
+  data, 
+  onRefresh, 
+  onUpdateSettings, 
+  isLoading,
+  useMockData,
+  onToggleMockData,
+  currentCity,
+  currentRoofArea,
+  currentSystemSize,
+}: ForecastDashboardProps) => {
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  
   const chartData = data.days.map((day) => ({
     date: new Date(day.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
     "Clear Sky": day.ghi_clear_kwh,
@@ -17,18 +38,37 @@ export const ForecastDashboard = ({ data, onRefresh }: ForecastDashboardProps) =
   }));
 
   return (
-    <section className="container mx-auto px-4 py-12">
+    <section className="container mx-auto px-4 py-8">
       <div className="max-w-6xl mx-auto space-y-8">
+        {/* Header with SolarMind branding */}
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-3xl font-bold">{data.location}</h2>
-            <p className="text-muted-foreground">7-Day Solar Forecast</p>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              SolarMind
+            </h1>
+            <p className="text-lg text-muted-foreground mt-1">{data.location}</p>
           </div>
-          <Button onClick={onRefresh} variant="outline" className="gap-2">
-            <RefreshCw className="h-4 w-4" />
-            Refresh Data
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={onRefresh} variant="outline" size="icon">
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+            <Button onClick={() => setSettingsOpen(true)} variant="outline" size="icon">
+              <Settings className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
+
+        <SettingsDialog
+          open={settingsOpen}
+          onOpenChange={setSettingsOpen}
+          onSubmit={onUpdateSettings}
+          isLoading={isLoading}
+          useMockData={useMockData}
+          onToggleMockData={onToggleMockData}
+          currentCity={currentCity}
+          currentRoofArea={currentRoofArea}
+          currentSystemSize={currentSystemSize}
+        />
 
         {/* Today's Summary Card */}
         <Card className="border-primary/20 shadow-[var(--shadow-card)] bg-gradient-to-br from-primary/5 to-transparent">

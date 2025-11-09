@@ -38,6 +38,9 @@ const Index = () => {
   const [useMockData, setUseMockData] = useState(true);
   const [lastForecastTime, setLastForecastTime] = useState<number>(0);
   const [lastRefreshTime, setLastRefreshTime] = useState<number>(0);
+  const [currentCity, setCurrentCity] = useState("Zagreb");
+  const [currentRoofArea, setCurrentRoofArea] = useState(50);
+  const [currentSystemSize, setCurrentSystemSize] = useState(5);
   const { toast } = useToast();
 
   const handleGetForecast = async (city: string, roofArea: number, systemSize: number) => {
@@ -63,6 +66,9 @@ const Index = () => {
       if (error) throw error;
 
       setForecastData(data);
+      setCurrentCity(city);
+      setCurrentRoofArea(roofArea);
+      setCurrentSystemSize(systemSize);
       setLastForecastTime(now);
       toast({
         title: "Forecast loaded successfully",
@@ -101,16 +107,26 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-blue to-background">
-      <HeroSection 
-        onSubmit={handleGetForecast} 
-        isLoading={isLoading}
-        useMockData={useMockData}
-        onToggleMockData={setUseMockData}
-      />
-      
-      {forecastData && (
+      {!forecastData ? (
+        <HeroSection 
+          onSubmit={handleGetForecast} 
+          isLoading={isLoading}
+          useMockData={useMockData}
+          onToggleMockData={setUseMockData}
+        />
+      ) : (
         <>
-          <ForecastDashboard data={forecastData} onRefresh={handleRefresh} />
+          <ForecastDashboard 
+            data={forecastData} 
+            onRefresh={handleRefresh}
+            onUpdateSettings={handleGetForecast}
+            isLoading={isLoading}
+            useMockData={useMockData}
+            onToggleMockData={setUseMockData}
+            currentCity={currentCity}
+            currentRoofArea={currentRoofArea}
+            currentSystemSize={currentSystemSize}
+          />
           <AISummary data={forecastData} />
           <ChatSection />
         </>
