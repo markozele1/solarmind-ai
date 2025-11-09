@@ -12,7 +12,6 @@ interface SettingsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (city: string, roofArea: number, systemSize: number, panelEfficiency: number, systemCost: number) => void;
-  onUpdateHomeParams?: (roofArea: number, systemSize: number, panelEfficiency: number, systemCost: number) => void;
   isLoading: boolean;
   useMockData: boolean;
   onToggleMockData: (value: boolean) => void;
@@ -34,7 +33,6 @@ export const SettingsDialog = ({
   open,
   onOpenChange,
   onSubmit,
-  onUpdateHomeParams,
   isLoading,
   useMockData,
   onToggleMockData,
@@ -107,25 +105,19 @@ export const SettingsDialog = ({
     const isRoofAreaValid = validateRoofArea(roofArea);
     const isSystemSizeValid = validateSystemSize(systemSize);
     
-    if (isRoofAreaValid && isSystemSizeValid) {
+    if (selectedCity && isRoofAreaValid && isSystemSizeValid) {
       // Store updated values in sessionStorage
       sessionStorage.setItem('monthlyBill', monthlyBill);
       sessionStorage.setItem('electricityRate', electricityRate);
       sessionStorage.setItem('panelEfficiency', panelEfficiency);
       sessionStorage.setItem('systemCost', systemCost);
-      
-      if (selectedCity) {
-        // Full update with new location
-        onSubmit(selectedCity.name, parseFloat(roofArea), parseFloat(systemSize), parseFloat(panelEfficiency), parseFloat(systemCost));
-      } else if (onUpdateHomeParams) {
-        // Update only home parameters without fetching new weather data
-        onUpdateHomeParams(parseFloat(roofArea), parseFloat(systemSize), parseFloat(panelEfficiency), parseFloat(systemCost));
-      }
+      onSubmit(selectedCity.name, parseFloat(roofArea), parseFloat(systemSize), parseFloat(panelEfficiency), parseFloat(systemCost));
       onOpenChange(false);
     }
   };
 
-  const isFormValid = roofArea !== "" && 
+  const isFormValid = selectedCity !== null && 
+                      roofArea !== "" && 
                       systemSize !== "" && 
                       !roofAreaError && 
                       !systemSizeError;
@@ -254,7 +246,7 @@ export const SettingsDialog = ({
           </div>
 
           <Button type="submit" className="w-full" disabled={isLoading || !isFormValid}>
-            {isLoading ? "Loading..." : selectedCity ? "Update Forecast" : "Update Settings"}
+            {isLoading ? "Loading..." : "Update Forecast"}
           </Button>
         </form>
       </DialogContent>
