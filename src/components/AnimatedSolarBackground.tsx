@@ -13,121 +13,124 @@ export const AnimatedSolarBackground = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-      {/* Radial gradient base */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-sky-blue/20 to-background" />
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+      {/* Dark dramatic sky with smoke */}
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-orange-900/40 to-red-900/30" />
       
-      {/* Parallax Sun */}
+      {/* Massive explosion effects */}
       <div 
-        className="absolute w-64 h-64 rounded-full blur-2xl opacity-40"
+        className="absolute explosion-burst explosion-1"
         style={{
-          top: `${20 + scrollY * 0.3}px`,
-          right: `${15}%`,
-          background: `radial-gradient(circle, hsl(var(--solar-glow)), hsl(var(--primary)) 40%, transparent 70%)`,
-          transform: `translateY(${scrollY * 0.15}px) scale(${1 + scrollY * 0.0002})`,
+          transform: `translateY(${scrollY * 0.1}px) scale(${1 + Math.sin(Date.now() / 1000) * 0.1})`,
+        }}
+      />
+      <div 
+        className="absolute explosion-burst explosion-2"
+        style={{
+          transform: `translateY(${scrollY * 0.15}px) scale(${1 + Math.cos(Date.now() / 800) * 0.15})`,
+        }}
+      />
+      <div 
+        className="absolute explosion-burst explosion-3"
+        style={{
+          transform: `translateY(${scrollY * 0.2}px) scale(${1 + Math.sin(Date.now() / 1200) * 0.12})`,
         }}
       />
       
-      {/* Sun core */}
+      {/* Fire plumes */}
+      <div className="absolute fire-plume fire-plume-1" />
+      <div className="absolute fire-plume fire-plume-2" />
+      <div className="absolute fire-plume fire-plume-3" />
+      
+      {/* Smoke clouds */}
       <div 
-        className="absolute w-32 h-32 rounded-full opacity-60"
-        style={{
-          top: `${84 + scrollY * 0.3}px`,
-          right: `calc(15% + 64px)`,
-          background: `radial-gradient(circle, hsl(var(--solar-glow) / 0.8), hsl(var(--primary) / 0.5) 50%, transparent 70%)`,
-          transform: `translateY(${scrollY * 0.15}px)`,
-          boxShadow: `0 0 60px hsl(var(--solar-glow) / 0.4)`,
-        }}
+        className="absolute smoke-cloud smoke-1"
+        style={{ transform: `translateY(${scrollY * 0.25}px) translateX(${scrollY * 0.05}px)` }}
       />
-
-      {/* Parallax Clouds */}
       <div 
-        className="absolute w-96 h-32 opacity-20"
-        style={{
-          top: `${100 + scrollY * 0.5}px`,
-          left: `10%`,
-          transform: `translateY(${scrollY * 0.25}px)`,
-        }}
-      >
-        <svg viewBox="0 0 200 60" className="w-full h-full">
-          <ellipse cx="50" cy="30" rx="40" ry="25" fill="hsl(var(--muted-foreground))" opacity="0.3" />
-          <ellipse cx="80" cy="25" rx="35" ry="20" fill="hsl(var(--muted-foreground))" opacity="0.4" />
-          <ellipse cx="110" cy="30" rx="40" ry="25" fill="hsl(var(--muted-foreground))" opacity="0.3" />
-        </svg>
-      </div>
-
+        className="absolute smoke-cloud smoke-2"
+        style={{ transform: `translateY(${scrollY * 0.3}px) translateX(${-scrollY * 0.08}px)` }}
+      />
       <div 
-        className="absolute w-80 h-28 opacity-15"
-        style={{
-          top: `${250 + scrollY * 0.4}px`,
-          right: `25%`,
-          transform: `translateY(${scrollY * 0.2}px)`,
-        }}
-      >
-        <svg viewBox="0 0 200 60" className="w-full h-full">
-          <ellipse cx="60" cy="30" rx="45" ry="25" fill="hsl(var(--muted-foreground))" opacity="0.4" />
-          <ellipse cx="100" cy="25" rx="40" ry="22" fill="hsl(var(--muted-foreground))" opacity="0.5" />
-          <ellipse cx="130" cy="32" rx="35" ry="20" fill="hsl(var(--muted-foreground))" opacity="0.3" />
-        </svg>
-      </div>
-
+        className="absolute smoke-cloud smoke-3"
+        style={{ transform: `translateY(${scrollY * 0.2}px) translateX(${scrollY * 0.06}px)` }}
+      />
+      
+      {/* Car silhouettes */}
       <div 
-        className="absolute w-72 h-24 opacity-25"
-        style={{
-          top: `${450 + scrollY * 0.6}px`,
-          left: `30%`,
-          transform: `translateY(${scrollY * 0.35}px)`,
-        }}
+        className="absolute car-silhouette car-1"
+        style={{ transform: `translateX(${scrollY * 0.4}px)` }}
       >
-        <svg viewBox="0 0 200 60" className="w-full h-full">
-          <ellipse cx="55" cy="28" rx="38" ry="22" fill="hsl(var(--muted-foreground))" opacity="0.3" />
-          <ellipse cx="90" cy="30" rx="42" ry="24" fill="hsl(var(--muted-foreground))" opacity="0.4" />
-          <ellipse cx="120" cy="26" rx="35" ry="20" fill="hsl(var(--muted-foreground))" opacity="0.35" />
+        <svg viewBox="0 0 100 40" className="w-full h-full fill-black/60">
+          <path d="M10,30 L15,20 L25,18 L35,18 L45,20 L50,30 L85,30 L88,25 L90,30 Z M20,32 A4,4 0 1,1 20,24 A4,4 0 1,1 20,32 Z M75,32 A4,4 0 1,1 75,24 A4,4 0 1,1 75,32 Z" />
         </svg>
       </div>
       
-      {/* Animated sun rays */}
       <div 
-        className="absolute w-[800px] h-[800px] opacity-20"
-        style={{
-          top: `${-200 + scrollY * 0.3}px`,
-          right: `calc(15% - 200px)`,
-          transform: `translateY(${scrollY * 0.15}px)`,
-        }}
+        className="absolute motorcycle-silhouette moto-1"
+        style={{ transform: `translateX(${-scrollY * 0.5}px) scaleX(-1)` }}
       >
-        <div className="absolute inset-0 animate-[spin_60s_linear_infinite]">
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute top-1/2 left-1/2 w-1 h-full origin-bottom"
-              style={{
-                transform: `rotate(${i * 45}deg)`,
-                background: `linear-gradient(to top, transparent, hsl(var(--solar-glow) / 0.2), transparent)`,
-              }}
-            />
-          ))}
-        </div>
+        <svg viewBox="0 0 80 40" className="w-full h-full fill-black/70">
+          <circle cx="15" cy="30" r="8" />
+          <circle cx="60" cy="30" r="8" />
+          <path d="M15,30 L25,15 L35,12 L45,15 L55,20 L60,30 M35,12 L38,8 L42,8 L45,12" />
+        </svg>
       </div>
-
-      {/* Floating orbs representing solar particles */}
-      <div className="solar-orb solar-orb-1" />
-      <div className="solar-orb solar-orb-2" />
-      <div className="solar-orb solar-orb-3" />
-      <div className="solar-orb solar-orb-4" />
-      <div className="solar-orb solar-orb-5" />
       
-      {/* Gentle wave overlay */}
+      {/* Debris particles */}
+      <div className="debris-field">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="debris-particle"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${3 + Math.random() * 4}s`,
+            }}
+          />
+        ))}
+      </div>
+      
+      {/* Sparks and embers */}
+      <div className="spark-field">
+        {[...Array(30)].map((_, i) => (
+          <div
+            key={i}
+            className="spark"
+            style={{
+              left: `${10 + Math.random() * 80}%`,
+              top: `${20 + Math.random() * 60}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${1 + Math.random() * 2}s`,
+            }}
+          />
+        ))}
+      </div>
+      
+      {/* Heat distortion waves */}
+      <div className="heat-wave heat-wave-1" />
+      <div className="heat-wave heat-wave-2" />
+      
+      {/* Ground with tire marks and destruction */}
+      <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-black/80 via-gray-900/60 to-transparent" />
       <svg
-        className="absolute bottom-0 left-0 w-full h-64 opacity-20"
+        className="absolute bottom-0 left-0 w-full h-32"
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 1440 320"
+        viewBox="0 0 1440 100"
         preserveAspectRatio="none"
       >
         <path
-          fill="hsl(var(--primary) / 0.1)"
-          d="M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,133.3C672,117,768,107,864,122.7C960,139,1056,181,1152,181.3C1248,181,1344,139,1392,117.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-          className="animate-[wave_15s_ease-in-out_infinite]"
+          fill="url(#groundGradient)"
+          d="M0,50 L120,45 L240,52 L360,48 L480,50 L600,47 L720,51 L840,49 L960,50 L1080,48 L1200,51 L1320,49 L1440,50 L1440,100 L0,100 Z"
         />
+        <defs>
+          <linearGradient id="groundGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="rgba(20,20,20,0.9)" />
+            <stop offset="100%" stopColor="rgba(0,0,0,1)" />
+          </linearGradient>
+        </defs>
       </svg>
     </div>
   );

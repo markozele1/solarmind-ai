@@ -3,6 +3,7 @@ import { HeroSection } from "@/components/HeroSection";
 import { ForecastDashboard } from "@/components/ForecastDashboard";
 import { AISummary } from "@/components/AISummary";
 import { ChatSection } from "@/components/ChatSection";
+import { AnimatedSolarBackground } from "@/components/AnimatedSolarBackground";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -106,7 +107,8 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-blue to-background">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black relative overflow-hidden">
+      <AnimatedSolarBackground />
       {!forecastData ? (
         <HeroSection 
           onSubmit={handleGetForecast} 
