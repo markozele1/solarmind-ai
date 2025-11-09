@@ -5,60 +5,60 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Cached Zagreb data (last real API response)
-const CACHED_ZAGREB_DATA = {
-  location: "Zagreb, HR",
-  lat: 45.8150,
-  lon: 15.9819,
+// Cached London data (mock data)
+const CACHED_LONDON_DATA = {
+  location: "London, GB",
+  lat: 51.5074,
+  lon: -0.1278,
   days: [
     {
       date: "2025-11-09",
-      ghi_clear_wh: 2450,
-      ghi_cloudy_wh: 1680,
-      sunrise: "06:47",
-      sunset: "16:31"
+      ghi_clear_wh: 1850,
+      ghi_cloudy_wh: 1240,
+      sunrise: "07:12",
+      sunset: "16:18"
     },
     {
       date: "2025-11-10",
-      ghi_clear_wh: 2380,
-      ghi_cloudy_wh: 1590,
-      sunrise: "06:48",
-      sunset: "16:30"
+      ghi_clear_wh: 1820,
+      ghi_cloudy_wh: 1210,
+      sunrise: "07:14",
+      sunset: "16:17"
     },
     {
       date: "2025-11-11",
-      ghi_clear_wh: 2310,
-      ghi_cloudy_wh: 1520,
-      sunrise: "06:50",
-      sunset: "16:29"
+      ghi_clear_wh: 1790,
+      ghi_cloudy_wh: 1180,
+      sunrise: "07:15",
+      sunset: "16:15"
     },
     {
       date: "2025-11-12",
-      ghi_clear_wh: 2240,
-      ghi_cloudy_wh: 1450,
-      sunrise: "06:51",
-      sunset: "16:28"
+      ghi_clear_wh: 1760,
+      ghi_cloudy_wh: 1150,
+      sunrise: "07:17",
+      sunset: "16:14"
     },
     {
       date: "2025-11-13",
-      ghi_clear_wh: 2170,
-      ghi_cloudy_wh: 1380,
-      sunrise: "06:53",
-      sunset: "16:27"
+      ghi_clear_wh: 1730,
+      ghi_cloudy_wh: 1120,
+      sunrise: "07:18",
+      sunset: "16:13"
     },
     {
       date: "2025-11-14",
-      ghi_clear_wh: 2100,
-      ghi_cloudy_wh: 1310,
-      sunrise: "06:54",
-      sunset: "16:26"
+      ghi_clear_wh: 1700,
+      ghi_cloudy_wh: 1090,
+      sunrise: "07:20",
+      sunset: "16:12"
     },
     {
       date: "2025-11-15",
-      ghi_clear_wh: 2030,
-      ghi_cloudy_wh: 1240,
-      sunrise: "06:55",
-      sunset: "16:25"
+      ghi_clear_wh: 1670,
+      ghi_cloudy_wh: 1060,
+      sunrise: "07:21",
+      sunset: "16:11"
     }
   ]
 };
@@ -76,8 +76,8 @@ serve(async (req) => {
     let forecastData;
     
     if (useMockData) {
-      // Use cached Zagreb data
-      forecastData = CACHED_ZAGREB_DATA;
+      // Use cached London data
+      forecastData = CACHED_LONDON_DATA;
     } else {
       // Fetch live data from OpenWeather API
       const apiKey = Deno.env.get('OPENWEATHER_API_KEY');

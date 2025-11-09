@@ -160,7 +160,7 @@ export const ForecastDashboard = ({
               </div>
             </TooltipProvider>
             <p className="text-xs text-muted-foreground text-center italic mt-4">
-              Demo data based on last real Zagreb measurement.
+              Demo data based on last real London measurement.
             </p>
           </CardContent>
         </Card>

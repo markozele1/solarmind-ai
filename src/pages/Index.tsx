@@ -38,8 +38,8 @@ const Index = () => {
   const [useMockData, setUseMockData] = useState(true);
   const [lastForecastTime, setLastForecastTime] = useState<number>(0);
   const [lastRefreshTime, setLastRefreshTime] = useState<number>(0);
-  const [currentCity, setCurrentCity] = useState("Zagreb");
-  const [currentRoofArea, setCurrentRoofArea] = useState(50);
+  const [currentCity, setCurrentCity] = useState("London");
+  const [currentRoofArea, setCurrentRoofArea] = useState(10);
   const [currentSystemSize, setCurrentSystemSize] = useState(5);
   const { toast } = useToast();
 
