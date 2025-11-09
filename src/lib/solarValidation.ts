@@ -11,7 +11,7 @@ export const SOLAR_VALIDATION_RULES: Record<string, ValidationRule> = {
   roofArea: {
     min: 5,
     max: 300,
-    default: 10,
+    default: 40,
     unit: "m²",
     hint: "Typical home roof 20–60 m²",
     label: "Roof Area"
