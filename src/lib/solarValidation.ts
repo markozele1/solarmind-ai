@@ -19,7 +19,7 @@ export const SOLAR_VALIDATION_RULES: Record<string, ValidationRule> = {
   systemSize: {
     min: 1,
     max: 100,
-    default: 5,
+    default: 6.5,
     unit: "kW",
     hint: "Typical system 3–10 kW",
     label: "System Size"
