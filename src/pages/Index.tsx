@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { ForecastDashboard } from "@/components/ForecastDashboard";
 import { AISummary } from "@/components/AISummary";
@@ -42,6 +42,13 @@ const Index = () => {
   const [currentRoofArea, setCurrentRoofArea] = useState(10);
   const [currentSystemSize, setCurrentSystemSize] = useState(5);
   const { toast } = useToast();
+  const forecastRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (forecastData && forecastRef.current) {
+      forecastRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [forecastData]);
 
   const handleGetForecast = async (city: string, roofArea: number, systemSize: number) => {
     const now = Date.now();
@@ -115,7 +122,7 @@ const Index = () => {
           onToggleMockData={setUseMockData}
         />
       ) : (
-        <>
+        <div ref={forecastRef}>
           <ForecastDashboard 
             data={forecastData} 
             onRefresh={handleRefresh}
@@ -129,7 +136,7 @@ const Index = () => {
           />
           <AISummary data={forecastData} />
           <ChatSection />
-        </>
+        </div>
       )}
     </div>
   );

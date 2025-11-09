@@ -78,21 +78,21 @@ export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData
     <section className="relative container mx-auto px-4 py-16 md:py-24">
       <AnimatedSolarBackground />
       <div className="max-w-3xl mx-auto text-center space-y-8 relative z-10">
-        <div className="flex justify-center mb-6">
-          <div className="p-4 rounded-full bg-gradient-to-br from-primary to-solar-glow shadow-[0_0_40px_hsl(var(--solar-glow)/0.3)]">
+        <div className="flex justify-center mb-6 animate-fade-in">
+          <div className="p-4 rounded-full bg-gradient-to-br from-primary to-solar-glow shadow-[0_0_40px_hsl(var(--solar-glow)/0.3)] animate-pulse">
             <Sun className="h-12 w-12 text-primary-foreground" />
           </div>
         </div>
         
-        <h1 className="text-4xl md:text-6xl font-bold text-primary">
+        <h1 className="text-4xl md:text-6xl font-bold text-primary animate-[fade-in_0.6s_ease-out_0.2s_both]">
           Discover Your Solar Potential
         </h1>
         
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto animate-[fade-in_0.6s_ease-out_0.4s_both]">
           Harness the power of AI and real-time solar data to understand how much clean energy your roof can generate
         </p>
 
-        <form onSubmit={handleSubmit} className="bg-card rounded-2xl shadow-[var(--shadow-card)] p-8 space-y-6 border border-border">
+        <form onSubmit={handleSubmit} className="bg-card rounded-2xl shadow-[var(--shadow-card)] p-8 space-y-6 border border-border animate-[fade-in_0.6s_ease-out_0.6s_both]">
           <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50 border border-border">
             <div className="flex items-center gap-3">
               <Database className="h-5 w-5 text-muted-foreground" />
