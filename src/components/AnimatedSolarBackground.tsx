@@ -13,43 +13,30 @@ export const AnimatedSolarBackground = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
       {/* Radial gradient base */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-sky-blue/20 to-background" />
       
-      {/* Enhanced Animated Sun */}
+      {/* Parallax Sun */}
       <div 
-        className="absolute w-80 h-80 rounded-full blur-3xl opacity-60 animate-pulse"
+        className="absolute w-64 h-64 rounded-full blur-2xl opacity-40"
         style={{
           top: `${20 + scrollY * 0.3}px`,
-          right: `${12}%`,
-          background: `radial-gradient(circle, hsl(var(--solar-glow)), hsl(var(--primary)) 30%, hsl(var(--primary) / 0.5) 50%, transparent 75%)`,
+          right: `${15}%`,
+          background: `radial-gradient(circle, hsl(var(--solar-glow)), hsl(var(--primary)) 40%, transparent 70%)`,
           transform: `translateY(${scrollY * 0.15}px) scale(${1 + scrollY * 0.0002})`,
-          animation: 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         }}
       />
       
-      {/* Sun core with glow */}
+      {/* Sun core */}
       <div 
-        className="absolute w-40 h-40 rounded-full opacity-70"
+        className="absolute w-32 h-32 rounded-full opacity-60"
         style={{
-          top: `${90 + scrollY * 0.3}px`,
-          right: `calc(12% + 80px)`,
-          background: `radial-gradient(circle, hsl(45 100% 60%), hsl(var(--solar-glow) / 0.9) 40%, hsl(var(--primary) / 0.6) 60%, transparent 75%)`,
+          top: `${84 + scrollY * 0.3}px`,
+          right: `calc(15% + 64px)`,
+          background: `radial-gradient(circle, hsl(var(--solar-glow) / 0.8), hsl(var(--primary) / 0.5) 50%, transparent 70%)`,
           transform: `translateY(${scrollY * 0.15}px)`,
-          boxShadow: `0 0 80px hsl(var(--solar-glow) / 0.5), 0 0 120px hsl(var(--primary) / 0.3)`,
-        }}
-      />
-      
-      {/* Inner sun highlight */}
-      <div 
-        className="absolute w-24 h-24 rounded-full opacity-90"
-        style={{
-          top: `${98 + scrollY * 0.3}px`,
-          right: `calc(12% + 88px)`,
-          background: `radial-gradient(circle, hsl(50 100% 70%), hsl(45 100% 60%) 50%, transparent 70%)`,
-          transform: `translateY(${scrollY * 0.15}px)`,
-          boxShadow: `0 0 40px hsl(50 100% 70% / 0.6)`,
+          boxShadow: `0 0 60px hsl(var(--solar-glow) / 0.4)`,
         }}
       />
 
@@ -142,66 +129,6 @@ export const AnimatedSolarBackground = () => {
           className="animate-[wave_15s_ease-in-out_infinite]"
         />
       </svg>
-      
-      {/* 3D Grass along bottom edge */}
-      <div className="absolute bottom-0 left-0 w-full h-32 overflow-hidden">
-        {/* Grass layer 1 - darkest/back */}
-        <div className="absolute bottom-0 left-0 w-full h-24 opacity-60">
-          {[...Array(80)].map((_, i) => (
-            <div
-              key={`grass1-${i}`}
-              className="absolute bottom-0"
-              style={{
-                left: `${i * 1.25}%`,
-                width: '2px',
-                height: `${15 + Math.sin(i * 0.8) * 8}px`,
-                background: 'linear-gradient(to top, hsl(120 40% 25%), hsl(120 50% 35%))',
-                transform: `rotate(${Math.sin(i * 0.5) * 8}deg) translateY(${Math.sin(i * 0.3) * 2}px)`,
-                transformOrigin: 'bottom',
-              }}
-            />
-          ))}
-        </div>
-        
-        {/* Grass layer 2 - medium */}
-        <div className="absolute bottom-0 left-0 w-full h-28 opacity-75">
-          {[...Array(100)].map((_, i) => (
-            <div
-              key={`grass2-${i}`}
-              className="absolute bottom-0"
-              style={{
-                left: `${i * 1}%`,
-                width: '2.5px',
-                height: `${18 + Math.cos(i * 0.7) * 10}px`,
-                background: 'linear-gradient(to top, hsl(120 45% 30%), hsl(120 55% 40%))',
-                transform: `rotate(${Math.cos(i * 0.4) * 10}deg) translateY(${Math.cos(i * 0.25) * 3}px)`,
-                transformOrigin: 'bottom',
-                animation: `sway ${3 + (i % 3)}s ease-in-out infinite ${i * 0.1}s`,
-              }}
-            />
-          ))}
-        </div>
-        
-        {/* Grass layer 3 - lightest/front */}
-        <div className="absolute bottom-0 left-0 w-full h-32 opacity-90">
-          {[...Array(120)].map((_, i) => (
-            <div
-              key={`grass3-${i}`}
-              className="absolute bottom-0"
-              style={{
-                left: `${i * 0.83}%`,
-                width: '3px',
-                height: `${22 + Math.sin(i * 0.6) * 12}px`,
-                background: 'linear-gradient(to top, hsl(120 50% 35%), hsl(120 60% 45%), hsl(120 65% 50%))',
-                transform: `rotate(${Math.sin(i * 0.35) * 12}deg) translateY(${Math.sin(i * 0.2) * 4}px)`,
-                transformOrigin: 'bottom',
-                animation: `sway ${2.5 + (i % 4)}s ease-in-out infinite ${i * 0.15}s`,
-                filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1))',
-              }}
-            />
-          ))}
-        </div>
-      </div>
     </div>
   );
 };
