@@ -134,7 +134,7 @@ export const ForecastDashboard = ({
                     <div className="cursor-help">
                       <p className="text-sm text-muted-foreground">Energy Output</p>
                       <p className="text-2xl font-bold">{data.today.estimatedEnergy.toFixed(1)} kWh</p>
-                      <p className="text-xs text-muted-foreground">for {data.roofArea} m² roof, 20% efficiency</p>
+                      <p className="text-xs text-muted-foreground">for {data.roofArea} m² roof, {currentPanelEfficiency}% efficiency</p>
                     </div>
                   </TooltipTrigger>
                   <TooltipContent>
