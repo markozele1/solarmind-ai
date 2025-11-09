@@ -51,7 +51,7 @@ const Index = () => {
   const { toast } = useToast();
   const forecastRef = useRef<HTMLDivElement>(null);
 
-  // Load settings from sessionStorage when forecast data is available
+  // Load settings from sessionStorage only when forecast data is available
   useEffect(() => {
     if (forecastData) {
       const storedRate = sessionStorage.getItem('electricityRate');
@@ -64,12 +64,17 @@ const Index = () => {
       if (storedBill) {
         setMonthlyBill(parseFloat(storedBill));
       }
+      // Only restore efficiency from storage if we have forecast data
       if (storedEfficiency) {
         setPanelEfficiency(parseFloat(storedEfficiency));
       }
       if (storedCost) {
         setSystemCost(parseFloat(storedCost));
       }
+    } else {
+      // Reset to default when starting fresh (no forecast data)
+      setPanelEfficiency(20);
+      setSystemCost(2000);
     }
   }, [forecastData]);
 

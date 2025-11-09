@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Sun, Database } from "lucide-react";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 import { AnimatedSolarBackground } from "./AnimatedSolarBackground";
 import { CityAutocomplete } from "./CityAutocomplete";
 import { CityOption } from "@/hooks/useCityAutocomplete";
+import { ValidatedInput } from "./ui/validated-input";
+import { SOLAR_VALIDATION_RULES, validateValue } from "@/lib/solarValidation";
 
 interface HeroSectionProps {
   onSubmit: (city: string, roofArea: number, systemSize: number) => void;
@@ -15,69 +16,37 @@ interface HeroSectionProps {
   onToggleMockData: (value: boolean) => void;
 }
 
-const MIN_ROOF_AREA = 1;
-const MAX_ROOF_AREA = 100;
-const MIN_SYSTEM_SIZE = 1;
-const MAX_SYSTEM_SIZE = 20;
-
 export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData }: HeroSectionProps) => {
   const [selectedCity, setSelectedCity] = useState<CityOption | null>(null);
-  const [roofArea, setRoofArea] = useState("10");
-  const [systemSize, setSystemSize] = useState("5");
-  const [roofAreaError, setRoofAreaError] = useState<string | null>(null);
-  const [systemSizeError, setSystemSizeError] = useState<string | null>(null);
-  const [monthlyBill, setMonthlyBill] = useState("150");
-  const [electricityRate, setElectricityRate] = useState("0.15");
-
-  const validateRoofArea = (value: string) => {
-    const num = parseFloat(value);
-    if (isNaN(num) || num < MIN_ROOF_AREA || num > MAX_ROOF_AREA) {
-      setRoofAreaError(`Roof area must be between ${MIN_ROOF_AREA} m² and ${MAX_ROOF_AREA} m².`);
-      return false;
-    }
-    setRoofAreaError(null);
-    return true;
-  };
-
-  const validateSystemSize = (value: string) => {
-    const num = parseFloat(value);
-    if (isNaN(num) || num < MIN_SYSTEM_SIZE || num > MAX_SYSTEM_SIZE) {
-      setSystemSizeError(`System size must be between ${MIN_SYSTEM_SIZE} kW and ${MAX_SYSTEM_SIZE} kW.`);
-      return false;
-    }
-    setSystemSizeError(null);
-    return true;
-  };
-
-  const handleRoofAreaChange = (value: string) => {
-    setRoofArea(value);
-    if (value) validateRoofArea(value);
-  };
-
-  const handleSystemSizeChange = (value: string) => {
-    setSystemSize(value);
-    if (value) validateSystemSize(value);
-  };
+  const [roofArea, setRoofArea] = useState(String(SOLAR_VALIDATION_RULES.roofArea.default));
+  const [systemSize, setSystemSize] = useState(String(SOLAR_VALIDATION_RULES.systemSize.default));
+  const [panelEfficiency, setPanelEfficiency] = useState(String(SOLAR_VALIDATION_RULES.panelEfficiency.default));
+  const [systemCost, setSystemCost] = useState(String(SOLAR_VALIDATION_RULES.systemCost.default));
+  const [monthlyBill, setMonthlyBill] = useState(String(SOLAR_VALIDATION_RULES.monthlyBill.default));
+  const [electricityRate, setElectricityRate] = useState(String(SOLAR_VALIDATION_RULES.electricityRate.default));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const isRoofAreaValid = validateRoofArea(roofArea);
-    const isSystemSizeValid = validateSystemSize(systemSize);
+    if (!selectedCity) return;
+
+    // Store additional data in sessionStorage for use in other components
+    sessionStorage.setItem('monthlyBill', monthlyBill);
+    sessionStorage.setItem('electricityRate', electricityRate);
+    sessionStorage.setItem('panelEfficiency', panelEfficiency);
+    sessionStorage.setItem('systemCost', systemCost);
     
-    if (selectedCity && isRoofAreaValid && isSystemSizeValid) {
-      // Store additional data in sessionStorage for use in other components
-      sessionStorage.setItem('monthlyBill', monthlyBill);
-      sessionStorage.setItem('electricityRate', electricityRate);
-      onSubmit(selectedCity.name, parseFloat(roofArea), parseFloat(systemSize));
-    }
+    onSubmit(selectedCity.name, parseFloat(roofArea), parseFloat(systemSize));
   };
 
-  const isFormValid = selectedCity !== null && 
-                      roofArea !== "" && 
-                      systemSize !== "" && 
-                      !roofAreaError && 
-                      !systemSizeError;
+  const isFormValid = 
+    selectedCity && 
+    validateValue(roofArea, SOLAR_VALIDATION_RULES.roofArea).isValid &&
+    validateValue(systemSize, SOLAR_VALIDATION_RULES.systemSize).isValid &&
+    validateValue(panelEfficiency, SOLAR_VALIDATION_RULES.panelEfficiency).isValid &&
+    validateValue(systemCost, SOLAR_VALIDATION_RULES.systemCost).isValid &&
+    validateValue(electricityRate, SOLAR_VALIDATION_RULES.electricityRate).isValid &&
+    validateValue(monthlyBill, SOLAR_VALIDATION_RULES.monthlyBill).isValid;
 
   return (
     <section className="relative container mx-auto px-4 py-16 md:py-24">
@@ -122,73 +91,48 @@ export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData
             onCitySelect={setSelectedCity}
           />
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-2 text-left">
-              <Label htmlFor="roofArea">Roof Area (m²)</Label>
-              <Input
-                id="roofArea"
-                type="number"
-                min={MIN_ROOF_AREA}
-                max={MAX_ROOF_AREA}
-                step="0.1"
-                value={roofArea}
-                onChange={(e) => handleRoofAreaChange(e.target.value)}
-                className={`h-12 text-base ${roofAreaError ? 'border-destructive focus-visible:ring-destructive' : ''}`}
-              />
-              {roofAreaError && (
-                <p className="text-sm text-destructive">{roofAreaError}</p>
-              )}
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ValidatedInput
+              id="roofArea"
+              value={roofArea}
+              onChange={setRoofArea}
+              rule={SOLAR_VALIDATION_RULES.roofArea}
+            />
 
-            <div className="space-y-2 text-left">
-              <Label htmlFor="systemSize">System Size (kW)</Label>
-              <Input
-                id="systemSize"
-                type="number"
-                min={MIN_SYSTEM_SIZE}
-                max={MAX_SYSTEM_SIZE}
-                step="0.1"
-                value={systemSize}
-                onChange={(e) => handleSystemSizeChange(e.target.value)}
-                className={`h-12 text-base ${systemSizeError ? 'border-destructive focus-visible:ring-destructive' : ''}`}
-              />
-              {systemSizeError && (
-                <p className="text-sm text-destructive">{systemSizeError}</p>
-              )}
-            </div>
-          </div>
+            <ValidatedInput
+              id="systemSize"
+              value={systemSize}
+              onChange={setSystemSize}
+              rule={SOLAR_VALIDATION_RULES.systemSize}
+            />
 
-          {/* Optional Fields for Better Estimates */}
-          <div className="pt-4 border-t border-border">
-            <p className="text-sm text-muted-foreground mb-4 text-left">Optional: For more accurate savings estimates</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2 text-left">
-                <Label htmlFor="monthlyBill">Monthly Electricity Bill (€)</Label>
-                <Input
-                  id="monthlyBill"
-                  type="number"
-                  min={0}
-                  step={10}
-                  value={monthlyBill}
-                  onChange={(e) => setMonthlyBill(e.target.value)}
-                  placeholder="150"
-                  className="h-12 text-base"
-                />
-              </div>
-              <div className="space-y-2 text-left">
-                <Label htmlFor="electricityRate">Electricity Rate (€/kWh)</Label>
-                <Input
-                  id="electricityRate"
-                  type="number"
-                  min={0}
-                  step={0.01}
-                  value={electricityRate}
-                  onChange={(e) => setElectricityRate(e.target.value)}
-                  placeholder="0.15"
-                  className="h-12 text-base"
-                />
-              </div>
-            </div>
+            <ValidatedInput
+              id="panelEfficiency"
+              value={panelEfficiency}
+              onChange={setPanelEfficiency}
+              rule={SOLAR_VALIDATION_RULES.panelEfficiency}
+            />
+
+            <ValidatedInput
+              id="systemCost"
+              value={systemCost}
+              onChange={setSystemCost}
+              rule={SOLAR_VALIDATION_RULES.systemCost}
+            />
+
+            <ValidatedInput
+              id="monthlyBill"
+              value={monthlyBill}
+              onChange={setMonthlyBill}
+              rule={SOLAR_VALIDATION_RULES.monthlyBill}
+            />
+
+            <ValidatedInput
+              id="electricityRate"
+              value={electricityRate}
+              onChange={setElectricityRate}
+              rule={SOLAR_VALIDATION_RULES.electricityRate}
+            />
           </div>
 
           <Button
