@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { ForecastData } from "@/pages/Index";
 import { Sun, Sunrise, Sunset, RefreshCw, Settings } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 import { SettingsDialog } from "./SettingsDialog";
 
 interface ForecastDashboardProps {
@@ -31,11 +31,14 @@ export const ForecastDashboard = ({
 }: ForecastDashboardProps) => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   
-  const chartData = data.days.map((day) => ({
-    date: new Date(day.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-    "Clear Sky": day.ghi_clear_kwh,
-    Cloudy: day.ghi_cloudy_kwh,
-  }));
+  const getSunIntensity = (ghiCloudy: number, ghiClear: number) => {
+    const percentage = (ghiCloudy / ghiClear) * 100;
+    if (percentage >= 80) return { opacity: 1, label: "Excellent" };
+    if (percentage >= 60) return { opacity: 0.8, label: "Very Good" };
+    if (percentage >= 40) return { opacity: 0.6, label: "Good" };
+    if (percentage >= 20) return { opacity: 0.4, label: "Fair" };
+    return { opacity: 0.25, label: "Poor" };
+  };
 
   return (
     <section className="container mx-auto px-4 py-8">
@@ -118,39 +121,45 @@ export const ForecastDashboard = ({
 
         <Card className="border-border shadow-[var(--shadow-card)]">
           <CardHeader>
-            <CardTitle>Global Horizontal Irradiance (GHI) - 7 Days</CardTitle>
+            <CardTitle>7-Day Solar Forecast</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-                <XAxis dataKey="date" className="text-xs" />
-                <YAxis label={{ value: "kWh/m²", angle: -90, position: "insideLeft" }} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "hsl(var(--card))",
-                    border: "1px solid hsl(var(--border))",
-                    borderRadius: "var(--radius)",
-                  }}
-                />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="Clear Sky"
-                  stroke="hsl(var(--primary))"
-                  strokeWidth={2}
-                  dot={{ fill: "hsl(var(--primary))" }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="Cloudy"
-                  stroke="hsl(var(--muted-foreground))"
-                  strokeWidth={2}
-                  dot={{ fill: "hsl(var(--muted-foreground))" }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-            <p className="text-xs text-muted-foreground text-center italic mt-2">
+          <CardContent>
+            <TooltipProvider>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                {data.days.map((day) => {
+                  const date = new Date(day.date);
+                  const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
+                  const dateStr = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+                  const intensity = getSunIntensity(day.ghi_cloudy_kwh, day.ghi_clear_kwh);
+                  
+                  return (
+                    <UITooltip key={day.date}>
+                      <TooltipTrigger asChild>
+                        <div className="flex flex-col items-center p-4 rounded-lg border border-border hover:bg-accent/5 transition-colors cursor-pointer">
+                          <p className="text-sm font-medium text-foreground mb-1">{dayName}</p>
+                          <p className="text-xs text-muted-foreground mb-3">{dateStr}</p>
+                          <Sun 
+                            className="h-12 w-12 mb-2 text-primary transition-opacity" 
+                            style={{ opacity: intensity.opacity }}
+                            strokeWidth={2.5}
+                            fill="currentColor"
+                          />
+                          <p className="text-xs font-medium text-muted-foreground">{intensity.label}</p>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <div className="text-sm space-y-1">
+                          <p className="font-semibold">GHI: {day.ghi_cloudy_kwh.toFixed(1)} kWh/m²</p>
+                          <p className="text-xs text-muted-foreground">Clear sky: {day.ghi_clear_kwh.toFixed(1)} kWh/m²</p>
+                          <p className="text-xs text-muted-foreground">Quality: {intensity.label}</p>
+                        </div>
+                      </TooltipContent>
+                    </UITooltip>
+                  );
+                })}
+              </div>
+            </TooltipProvider>
+            <p className="text-xs text-muted-foreground text-center italic mt-4">
               Demo data based on last real Zagreb measurement.
             </p>
           </CardContent>
