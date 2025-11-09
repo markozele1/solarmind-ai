@@ -5,58 +5,57 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Cached London data (mock data)
+// Cached London data (mock data) - varied conditions for better visualization
 const CACHED_LONDON_DATA = {
-  location: "London, GB",
   lat: 51.5074,
   lon: -0.1278,
   days: [
     {
       date: "2025-11-09",
       ghi_clear_wh: 1850,
-      ghi_cloudy_wh: 1240,
+      ghi_cloudy_wh: 1500,
       sunrise: "07:12",
       sunset: "16:18"
     },
     {
       date: "2025-11-10",
       ghi_clear_wh: 1820,
-      ghi_cloudy_wh: 1210,
+      ghi_cloudy_wh: 1310,
       sunrise: "07:14",
       sunset: "16:17"
     },
     {
       date: "2025-11-11",
       ghi_clear_wh: 1790,
-      ghi_cloudy_wh: 1180,
+      ghi_cloudy_wh: 950,
       sunrise: "07:15",
       sunset: "16:15"
     },
     {
       date: "2025-11-12",
       ghi_clear_wh: 1760,
-      ghi_cloudy_wh: 1150,
+      ghi_cloudy_wh: 620,
       sunrise: "07:17",
       sunset: "16:14"
     },
     {
       date: "2025-11-13",
       ghi_clear_wh: 1730,
-      ghi_cloudy_wh: 1120,
+      ghi_cloudy_wh: 350,
       sunrise: "07:18",
       sunset: "16:13"
     },
     {
       date: "2025-11-14",
       ghi_clear_wh: 1700,
-      ghi_cloudy_wh: 1090,
+      ghi_cloudy_wh: 780,
       sunrise: "07:20",
       sunset: "16:12"
     },
     {
       date: "2025-11-15",
       ghi_clear_wh: 1670,
-      ghi_cloudy_wh: 1060,
+      ghi_cloudy_wh: 1200,
       sunrise: "07:21",
       sunset: "16:11"
     }
@@ -74,10 +73,14 @@ serve(async (req) => {
     console.log(`Using ${useMockData ? 'cached' : 'live'} data for: ${city}, roofArea: ${roofArea}m²`);
 
     let forecastData;
+    let locationName = city; // Default to user's input
     
     if (useMockData) {
-      // Use cached London data
-      forecastData = CACHED_LONDON_DATA;
+      // Use cached London data but with user's city name
+      forecastData = {
+        ...CACHED_LONDON_DATA,
+        location: city // Use the city name the user entered
+      };
     } else {
       // Fetch live data from OpenWeather API
       const apiKey = Deno.env.get('OPENWEATHER_API_KEY');

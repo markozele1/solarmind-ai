@@ -159,9 +159,11 @@ export const ForecastDashboard = ({
                 })}
               </div>
             </TooltipProvider>
-            <p className="text-xs text-muted-foreground text-center italic mt-4">
-              Demo data based on last real London measurement.
-            </p>
+            {useMockData && (
+              <p className="text-xs text-muted-foreground text-center italic mt-4">
+                Demo data based on last real London measurement.
+              </p>
+            )}
           </CardContent>
         </Card>
       </div>
