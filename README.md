@@ -1,6 +1,6 @@
 # ☀️ SolarMind - AI-Powered Solar Energy Advisor
 
-[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-Visit%20Site-blue?style=for-the-badge)](https://lovable.dev/projects/71f810b7-7114-4b34-91f4-8c65d4f47335)
+[![Live Demo](https://img.shields.io/badge/🚀%20Live%20Demo-Visit%20Site-blue?style=for-the-badge)](https://solarmind-ai.lovable.app/)
 [![Built with Lovable](https://img.shields.io/badge/Built%20with-Lovable-ff69b4?style=for-the-badge)](https://lovable.dev)
 [![AI Powered](https://img.shields.io/badge/AI-Powered-green?style=for-the-badge)](https://ai.gateway.lovable.dev)
 
@@ -155,7 +155,7 @@ Unlike generic solar calculators that provide static estimates, SolarMind combin
 🎥 [Watch 3-Minute Demo Video](#) *(Link to your demo)*
 
 ### **Live Application**
-🌐 **[Try SolarMind Live](https://lovable.dev/projects/71f810b7-7114-4b34-91f4-8c65d4f47335)**
+🌐 **[Try SolarMind Live](https://solarmind-ai.lovable.app/)**
 
 ---
 
@@ -169,7 +169,7 @@ Unlike generic solar calculators that provide static estimates, SolarMind combin
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git clone https://github.com/markozele1/solarmind-ai
 cd YOUR_REPO
 
 # Install dependencies
