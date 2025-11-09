@@ -46,6 +46,8 @@ All colors MUST be HSL.
     --gradient-sky: linear-gradient(180deg, hsl(204 94% 94%), hsl(0 0% 100%));
     --shadow-soft: 0 4px 16px -2px hsl(38 92% 50% / 0.1);
     --shadow-card: 0 8px 24px -4px hsl(0 0% 0% / 0.08);
+    
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     --sidebar-background: 0 0% 98%;
 
@@ -119,5 +121,65 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .solar-orb {
+    @apply absolute rounded-full blur-3xl;
+    background: radial-gradient(circle, hsl(var(--solar-glow) / 0.15), transparent 70%);
+  }
+  
+  .solar-orb-1 {
+    @apply w-96 h-96 top-[10%] left-[15%];
+    animation: float 20s ease-in-out infinite;
+  }
+  
+  .solar-orb-2 {
+    @apply w-64 h-64 top-[60%] right-[10%];
+    animation: float 25s ease-in-out infinite 5s;
+  }
+  
+  .solar-orb-3 {
+    @apply w-80 h-80 bottom-[20%] left-[5%];
+    animation: float 30s ease-in-out infinite 10s;
+  }
+  
+  .solar-orb-4 {
+    @apply w-56 h-56 top-[35%] right-[25%];
+    animation: float 22s ease-in-out infinite 3s;
+  }
+  
+  .solar-orb-5 {
+    @apply w-72 h-72 bottom-[10%] right-[15%];
+    animation: float 28s ease-in-out infinite 7s;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.15;
+  }
+  25% {
+    transform: translate(30px, -30px) scale(1.05);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(0.95);
+    opacity: 0.15;
+  }
+  75% {
+    transform: translate(20px, 30px) scale(1.02);
+    opacity: 0.18;
+  }
+}
+
+@keyframes wave {
+  0%, 100% {
+    d: path("M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,133.3C672,117,768,107,864,122.7C960,139,1056,181,1152,181.3C1248,181,1344,139,1392,117.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
+  }
+  50% {
+    d: path("M0,128L48,138.7C96,149,192,171,288,165.3C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,170.7C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z");
   }
 }
