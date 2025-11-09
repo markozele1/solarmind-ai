@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
+import { AnimatedSolarBackground } from "./AnimatedSolarBackground";
 import { CityAutocomplete } from "./CityAutocomplete";
 import { CityOption } from "@/hooks/useCityAutocomplete";
 
@@ -75,6 +76,7 @@ export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData
 
   return (
     <section className="relative container mx-auto px-4 py-16 md:py-24">
+      <AnimatedSolarBackground />
       <div className="max-w-3xl mx-auto text-center space-y-8 relative z-10">
         <div className="flex justify-center mb-6">
           <div className="p-4 rounded-full bg-gradient-to-br from-primary to-solar-glow shadow-[0_0_40px_hsl(var(--solar-glow)/0.3)]">
@@ -82,7 +84,7 @@ export const HeroSection = ({ onSubmit, isLoading, useMockData, onToggleMockData
           </div>
         </div>
         
-        <h1 className="text-4xl md:text-6xl font-bold text-primary">
+        <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-foreground via-primary to-solar-glow bg-clip-text text-transparent">
           Discover Your Solar Potential
         </h1>
         
