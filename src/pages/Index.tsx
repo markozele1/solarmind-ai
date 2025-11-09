@@ -121,6 +121,17 @@ const Index = () => {
     }
   };
 
+  const handleUpdateHomeParams = (roofArea: number, systemSize: number, updatedPanelEfficiency: number, updatedSystemCost: number) => {
+    setCurrentRoofArea(roofArea);
+    setCurrentSystemSize(systemSize);
+    setPanelEfficiency(updatedPanelEfficiency);
+    setSystemCost(updatedSystemCost);
+    toast({
+      title: "Settings updated",
+      description: "Home parameters updated successfully",
+    });
+  };
+
   const handleRefresh = () => {
     const now = Date.now();
     const timeSinceLastRefresh = now - lastRefreshTime;
@@ -156,6 +167,7 @@ const Index = () => {
             data={forecastData} 
             onRefresh={handleRefresh}
             onUpdateSettings={handleGetForecast}
+            onUpdateHomeParams={handleUpdateHomeParams}
             isLoading={isLoading}
             useMockData={useMockData}
             onToggleMockData={setUseMockData}
@@ -177,7 +189,7 @@ const Index = () => {
               systemCost={systemCost}
             />
           </div>
-          <SavingsBreakdown data={forecastData} electricityRate={electricityRate} />
+          <SavingsBreakdown data={forecastData} electricityRate={electricityRate} systemCost={systemCost} />
           <AISummary data={forecastData} />
           <SolarFAQ data={forecastData} electricityRate={electricityRate} />
           <ChatSection />

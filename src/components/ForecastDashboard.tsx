@@ -11,6 +11,7 @@ interface ForecastDashboardProps {
   data: ForecastData;
   onRefresh: () => void;
   onUpdateSettings: (city: string, roofArea: number, systemSize: number, panelEfficiency: number, systemCost: number) => void;
+  onUpdateHomeParams?: (roofArea: number, systemSize: number, panelEfficiency: number, systemCost: number) => void;
   isLoading: boolean;
   useMockData: boolean;
   onToggleMockData: (value: boolean) => void;
@@ -26,7 +27,8 @@ interface ForecastDashboardProps {
 export const ForecastDashboard = ({ 
   data, 
   onRefresh, 
-  onUpdateSettings, 
+  onUpdateSettings,
+  onUpdateHomeParams,
   isLoading,
   useMockData,
   onToggleMockData,
@@ -73,6 +75,7 @@ export const ForecastDashboard = ({
           open={settingsOpen}
           onOpenChange={setSettingsOpen}
           onSubmit={onUpdateSettings}
+          onUpdateHomeParams={onUpdateHomeParams}
           isLoading={isLoading}
           useMockData={useMockData}
           onToggleMockData={onToggleMockData}

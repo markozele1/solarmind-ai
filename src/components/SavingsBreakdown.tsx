@@ -6,17 +6,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 interface SavingsBreakdownProps {
   data: ForecastData;
   electricityRate: number; // €/kWh
+  systemCost: number; // User's actual system cost
 }
 
-export const SavingsBreakdown = ({ data, electricityRate }: SavingsBreakdownProps) => {
+export const SavingsBreakdown = ({ data, electricityRate, systemCost }: SavingsBreakdownProps) => {
   const dailyEnergy = data.today.estimatedEnergy;
   const dailySavings = dailyEnergy * electricityRate;
   const monthlySavings = dailySavings * 30;
   const yearlySavings = dailySavings * 365;
   const twentyFiveYearSavings = yearlySavings * 25;
 
-  const estimatedSystemCost = data.roofArea * 200; // Rough estimate: €200/m²
-  const paybackYears = estimatedSystemCost / yearlySavings;
+  const paybackYears = systemCost / yearlySavings;
 
   const yearlyCO2 = data.today.co2Savings * 365;
   const treesEquivalent = (yearlyCO2 / 21).toFixed(0); // A tree absorbs ~21kg CO2/year
@@ -67,7 +67,7 @@ export const SavingsBreakdown = ({ data, electricityRate }: SavingsBreakdownProp
                     <p className="font-semibold text-foreground">Estimated Payback Period</p>
                     <p className="text-2xl font-bold text-primary">{paybackYears.toFixed(1)} years</p>
                     <p className="text-sm text-muted-foreground">
-                      Based on estimated system cost of €{estimatedSystemCost.toLocaleString()}
+                      Based on system cost of €{systemCost.toLocaleString()}
                     </p>
                   </div>
                 </div>
