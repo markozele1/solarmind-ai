@@ -99,7 +99,7 @@ export const ForecastDashboard = ({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <TooltipProvider>
                 <UITooltip>
                   <TooltipTrigger asChild>
@@ -134,20 +134,6 @@ export const ForecastDashboard = ({
                 <UITooltip>
                   <TooltipTrigger asChild>
                     <div className="cursor-help">
-                      <p className="text-sm text-muted-foreground">Peak Sun Hours</p>
-                      <p className="text-2xl font-bold">{data.today.peakSunHours.toFixed(1)} h</p>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="max-w-xs">Hours of maximum solar intensity (1000 W/m²) your panels receive. This is the industry standard for comparing solar potential.</p>
-                  </TooltipContent>
-                </UITooltip>
-              </TooltipProvider>
-
-              <TooltipProvider>
-                <UITooltip>
-                  <TooltipTrigger asChild>
-                    <div className="cursor-help">
                       <p className="text-sm text-muted-foreground">Energy Output</p>
                       <p className="text-2xl font-bold">{data.today.estimatedEnergy.toFixed(1)} kWh</p>
                       <p className="text-xs text-muted-foreground">for {data.roofArea} m² roof, 20% efficiency</p>
@@ -169,6 +155,22 @@ export const ForecastDashboard = ({
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="max-w-xs">Carbon dioxide emissions prevented by using solar energy instead of grid electricity (typically from fossil fuels).</p>
+                  </TooltipContent>
+                </UITooltip>
+              </TooltipProvider>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4 pt-2">
+              <TooltipProvider>
+                <UITooltip>
+                  <TooltipTrigger asChild>
+                    <div className="cursor-help">
+                      <p className="text-sm text-muted-foreground">Peak Sun Hours</p>
+                      <p className="text-2xl font-bold">{data.today.peakSunHours.toFixed(1)} h</p>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">Hours of maximum solar intensity (1000 W/m²) your panels receive. This is the industry standard for comparing solar potential.</p>
                   </TooltipContent>
                 </UITooltip>
               </TooltipProvider>

@@ -21,7 +21,7 @@ export const SystemSpecsCard = ({
 }: SystemSpecsCardProps) => {
   
   return (
-    <Card className="border-border bg-card/50 backdrop-blur">
+    <Card className="border-border bg-card/50 backdrop-blur max-w-2xl">
       <CardHeader>
         <div className="flex items-center gap-2">
           <Info className="h-5 w-5 text-primary" />
