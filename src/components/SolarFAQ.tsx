@@ -144,6 +144,14 @@ export const SolarFAQ = ({ data, electricityRate }: SolarFAQProps) => {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
+            <div className="mt-4 pt-4 border-t border-border">
+              <p className="text-xs text-muted-foreground">
+                * All calculations assume 18% panel efficiency and standard industry metrics. 
+                Installation costs estimated at $200/m² based on industry averages. 
+                Actual results vary by location, installer, and specific equipment. 
+                Always consult multiple local installers for accurate quotes.
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>

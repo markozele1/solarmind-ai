@@ -5,6 +5,7 @@ import { AISummary } from "@/components/AISummary";
 import { ChatSection } from "@/components/ChatSection";
 import { SavingsBreakdown } from "@/components/SavingsBreakdown";
 import { SolarFAQ } from "@/components/SolarFAQ";
+import { SystemSpecsCard } from "@/components/SystemSpecsCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -44,15 +45,20 @@ const Index = () => {
   const [currentRoofArea, setCurrentRoofArea] = useState(10);
   const [currentSystemSize, setCurrentSystemSize] = useState(5);
   const [electricityRate, setElectricityRate] = useState(0.15);
+  const [monthlyBill, setMonthlyBill] = useState(150);
   const { toast } = useToast();
   const forecastRef = useRef<HTMLDivElement>(null);
 
-  // Load electricity rate from sessionStorage when forecast data is available
+  // Load electricity rate and monthly bill from sessionStorage when forecast data is available
   useEffect(() => {
     if (forecastData) {
       const storedRate = sessionStorage.getItem('electricityRate');
+      const storedBill = sessionStorage.getItem('monthlyBill');
       if (storedRate) {
         setElectricityRate(parseFloat(storedRate));
+      }
+      if (storedBill) {
+        setMonthlyBill(parseFloat(storedBill));
       }
     }
   }, [forecastData]);
@@ -146,7 +152,17 @@ const Index = () => {
             currentCity={currentCity}
             currentRoofArea={currentRoofArea}
             currentSystemSize={currentSystemSize}
+            currentMonthlyBill={monthlyBill}
+            currentElectricityRate={electricityRate}
           />
+          <div className="container mx-auto px-4 py-6">
+            <SystemSpecsCard 
+              roofArea={forecastData.roofArea} 
+              systemSize={currentSystemSize}
+              electricityRate={electricityRate}
+              monthlyBill={monthlyBill}
+            />
+          </div>
           <SavingsBreakdown data={forecastData} electricityRate={electricityRate} />
           <AISummary data={forecastData} />
           <SolarFAQ data={forecastData} electricityRate={electricityRate} />

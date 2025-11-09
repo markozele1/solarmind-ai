@@ -18,6 +18,8 @@ interface SettingsDialogProps {
   currentCity: string;
   currentRoofArea: number;
   currentSystemSize: number;
+  currentMonthlyBill: number;
+  currentElectricityRate: number;
 }
 
 const MIN_ROOF_AREA = 1;
@@ -35,10 +37,14 @@ export const SettingsDialog = ({
   currentCity,
   currentRoofArea,
   currentSystemSize,
+  currentMonthlyBill,
+  currentElectricityRate,
 }: SettingsDialogProps) => {
   const [selectedCity, setSelectedCity] = useState<CityOption | null>(null);
   const [roofArea, setRoofArea] = useState(currentRoofArea.toString());
   const [systemSize, setSystemSize] = useState(currentSystemSize.toString());
+  const [monthlyBill, setMonthlyBill] = useState(currentMonthlyBill.toString());
+  const [electricityRate, setElectricityRate] = useState(currentElectricityRate.toString());
   const [roofAreaError, setRoofAreaError] = useState<string | null>(null);
   const [systemSizeError, setSystemSizeError] = useState<string | null>(null);
 
@@ -46,12 +52,14 @@ export const SettingsDialog = ({
     if (open) {
       setRoofArea(currentRoofArea.toString());
       setSystemSize(currentSystemSize.toString());
+      setMonthlyBill(currentMonthlyBill.toString());
+      setElectricityRate(currentElectricityRate.toString());
       setRoofAreaError(null);
       setSystemSizeError(null);
       // Reset city to show current city name (without full location data)
       setSelectedCity(null);
     }
-  }, [open, currentRoofArea, currentSystemSize]);
+  }, [open, currentRoofArea, currentSystemSize, currentMonthlyBill, currentElectricityRate]);
 
   const validateRoofArea = (value: string) => {
     const num = parseFloat(value);
@@ -90,6 +98,9 @@ export const SettingsDialog = ({
     const isSystemSizeValid = validateSystemSize(systemSize);
     
     if (selectedCity && isRoofAreaValid && isSystemSizeValid) {
+      // Store updated values in sessionStorage
+      sessionStorage.setItem('monthlyBill', monthlyBill);
+      sessionStorage.setItem('electricityRate', electricityRate);
       onSubmit(selectedCity.name, parseFloat(roofArea), parseFloat(systemSize));
       onOpenChange(false);
     }
@@ -167,6 +178,36 @@ export const SettingsDialog = ({
             {systemSizeError && (
               <p className="text-sm text-destructive">{systemSizeError}</p>
             )}
+          </div>
+
+          <div className="pt-4 border-t border-border space-y-4">
+            <p className="text-sm text-muted-foreground">Optional: For more accurate savings estimates</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="monthlyBill">Monthly Electricity Bill ($)</Label>
+                <Input
+                  id="monthlyBill"
+                  type="number"
+                  min={0}
+                  step={10}
+                  value={monthlyBill}
+                  onChange={(e) => setMonthlyBill(e.target.value)}
+                  placeholder="150"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="electricityRate">Electricity Rate ($/kWh)</Label>
+                <Input
+                  id="electricityRate"
+                  type="number"
+                  min={0}
+                  step={0.01}
+                  value={electricityRate}
+                  onChange={(e) => setElectricityRate(e.target.value)}
+                  placeholder="0.15"
+                />
+              </div>
+            </div>
           </div>
 
           <Button type="submit" className="w-full" disabled={isLoading || !isFormValid}>

@@ -30,6 +30,9 @@ export const SavingsBreakdown = ({ data, electricityRate }: SavingsBreakdownProp
               <DollarSign className="h-5 w-5 text-accent" />
               Your Savings Breakdown
             </CardTitle>
+            <p className="text-sm text-muted-foreground mt-2">
+              Based on today's solar potential of {dailyEnergy.toFixed(1)} kWh and your electricity rate of ${electricityRate.toFixed(2)}/kWh
+            </p>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="money" className="w-full">
@@ -119,6 +122,13 @@ export const SavingsBreakdown = ({ data, electricityRate }: SavingsBreakdownProp
                 </div>
               </TabsContent>
             </Tabs>
+            <div className="mt-4 pt-4 border-t border-border">
+              <p className="text-xs text-muted-foreground text-center">
+                * Estimates based on industry averages (18% panel efficiency, 0.5% annual degradation). 
+                Actual savings vary by location, weather patterns, and installation quality. 
+                Consult local installers for precise quotes.
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>

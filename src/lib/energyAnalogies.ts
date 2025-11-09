@@ -10,7 +10,7 @@ export const getEnergyAnalogies = (kWh: number): EnergyAnalogy[] => {
   const fridgeDays = Math.floor(kWh / 1.2);
   if (fridgeDays > 0) {
     analogies.push({
-      text: `Power a refrigerator for ${fridgeDays} ${fridgeDays === 1 ? 'day' : 'days'}`,
+      text: `Today's solar output can power a refrigerator for ${fridgeDays} ${fridgeDays === 1 ? 'day' : 'days'}`,
       icon: "🧊"
     });
   }
@@ -19,7 +19,7 @@ export const getEnergyAnalogies = (kWh: number): EnergyAnalogy[] => {
   const laptopHours = Math.floor(kWh / 0.1);
   if (laptopHours > 0) {
     analogies.push({
-      text: `Run your laptop for ${laptopHours} hours`,
+      text: `Today's solar output can run your laptop for ${laptopHours} hours`,
       icon: "💻"
     });
   }
@@ -28,7 +28,7 @@ export const getEnergyAnalogies = (kWh: number): EnergyAnalogy[] => {
   const phoneCharges = Math.floor(kWh / 0.02);
   if (phoneCharges > 0) {
     analogies.push({
-      text: `Charge ${phoneCharges} smartphones fully`,
+      text: `Today's solar output can charge ${phoneCharges} smartphones fully`,
       icon: "📱"
     });
   }
@@ -37,7 +37,7 @@ export const getEnergyAnalogies = (kWh: number): EnergyAnalogy[] => {
   const routerDays = Math.floor(kWh / 0.24);
   if (routerDays > 0) {
     analogies.push({
-      text: `Power your WiFi router for ${routerDays} ${routerDays === 1 ? 'day' : 'days'}`,
+      text: `Today's solar output can power your WiFi router for ${routerDays} ${routerDays === 1 ? 'day' : 'days'}`,
       icon: "📡"
     });
   }
@@ -46,7 +46,7 @@ export const getEnergyAnalogies = (kWh: number): EnergyAnalogy[] => {
   const ledHours = Math.floor(kWh / 0.01);
   if (ledHours > 0) {
     analogies.push({
-      text: `Light an LED bulb for ${ledHours} hours`,
+      text: `Today's solar output can light an LED bulb for ${ledHours} hours`,
       icon: "💡"
     });
   }
@@ -55,7 +55,7 @@ export const getEnergyAnalogies = (kWh: number): EnergyAnalogy[] => {
   const tvHours = Math.floor(kWh / 0.15);
   if (tvHours > 0) {
     analogies.push({
-      text: `Watch TV for ${tvHours} hours`,
+      text: `Today's solar output can let you watch TV for ${tvHours} hours`,
       icon: "📺"
     });
   }

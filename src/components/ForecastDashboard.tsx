@@ -17,6 +17,8 @@ interface ForecastDashboardProps {
   currentCity: string;
   currentRoofArea: number;
   currentSystemSize: number;
+  currentMonthlyBill: number;
+  currentElectricityRate: number;
 }
 
 export const ForecastDashboard = ({ 
@@ -29,6 +31,8 @@ export const ForecastDashboard = ({
   currentCity,
   currentRoofArea,
   currentSystemSize,
+  currentMonthlyBill,
+  currentElectricityRate,
 }: ForecastDashboardProps) => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   
@@ -76,6 +80,8 @@ export const ForecastDashboard = ({
           currentCity={currentCity}
           currentRoofArea={currentRoofArea}
           currentSystemSize={currentSystemSize}
+          currentMonthlyBill={currentMonthlyBill}
+          currentElectricityRate={currentElectricityRate}
         />
 
         {/* Today's Summary Card */}
