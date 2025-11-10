@@ -84,33 +84,57 @@ Our application leverages **AI and intelligent APIs** to solve user pain points:
 ### **Architecture Overview**
 
 ```
-┌──────────────────┐
-│   React Frontend │
-│   (TypeScript)   │
-└────────┬─────────┘
-         │
-         ├──────────────────────────────────────┐
-         │                                      │
-┌────────▼─────────┐                   ┌───────▼────────┐
-│  Lovable Cloud   │                   │  OpenWeather   │
-│  (Supabase)      │                   │     APIs       │
-│                  │                   │                │
-│  Edge Functions: │                   │ • Solar Rad.   │
-│  • solar-chat    │                   │ • Geocoding    │
-│  • ai-summary    │                   └────────────────┘
-│  • solar-forecast│
-│  • geocoding     │
-└────────┬─────────┘
-         │
-         ├─────────────────┐
-         │                 │
-┌────────▼─────┐  ┌───────▼────────┐
-│   OpenAI     │  │  OpenWeather   │
-│   API        │  │  Solar API     │
-│              │  │                │
-│ GPT-4o-mini  │  │ Radiation Data │
-│              │  │                │
-└──────────────┘  └────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                     React Frontend                          │
+│                  (TypeScript + Vite)                        │
+└──────────┬──────────────────────────────────┬───────────────┘
+           │                                  │
+           │ User Input:                      │ City Search:
+           │ • Chat messages                  │ • Autocomplete
+           │ • Forecast requests              │
+           │ • Summary generation             │
+           ▼                                  ▼
+┌──────────────────────────────┐   ┌─────────────────────────┐
+│    Edge Function:            │   │   Edge Function:        │
+│    solar-chat                │   │   geocoding             │
+│                              │   │                         │
+│ ┌─────────────────────────┐  │   │ ┌────────────────────┐  │
+│ │ OpenAI API              │  │   │ │ OpenWeather        │  │
+│ │ GPT-4o-mini             │◄─┤   │ │ Geocoding API      │◄─┤
+│ │ (Chat responses)        │  │   │ │ (City → Coords)    │  │
+│ └─────────────────────────┘  │   │ └────────────────────┘  │
+└──────────────────────────────┘   └─────────────────────────┘
+           ▲
+           │
+┌──────────┴───────────────────┐   ┌─────────────────────────┐
+│    Edge Function:            │   │   Edge Function:        │
+│    ai-summary                │   │   solar-forecast        │
+│                              │   │                         │
+│ ┌─────────────────────────┐  │   │ ┌────────────────────┐  │
+│ │ OpenAI API              │  │   │ │ OpenWeather        │  │
+│ │ GPT-4o-mini             │◄─┤   │ │ Solar Radiation &  │◄─┤
+│ │ (Daily insights)        │  │   │ │ Weather Forecast   │  │
+│ └─────────────────────────┘  │   │ │ (7-day predictions)│  │
+└──────────────────────────────┘   │ └────────────────────┘  │
+                                   └─────────────────────────┘
+           ▲                                  │
+           │                                  │
+           └──────────────┬───────────────────┘
+                          │
+              ┌───────────▼──────────────┐
+              │   Lovable Cloud          │
+              │   (Supabase Backend)     │
+              │                          │
+              │  • Secure API key mgmt   │
+              │  • Edge function runtime │
+              │  • CORS handling         │
+              └──────────────────────────┘
+
+Data Flow:
+1. Frontend → geocoding → OpenWeather Geocoding API → City suggestions
+2. Frontend → solar-forecast → OpenWeather Solar/Weather APIs → Energy predictions
+3. Frontend → solar-chat → OpenAI GPT-4o-mini → Conversational AI responses
+4. Frontend → ai-summary → OpenAI GPT-4o-mini → Personalized daily insights
 ```
 
 ### **Tech Stack**
