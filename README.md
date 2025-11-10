@@ -84,7 +84,7 @@ Our application leverages **AI and intelligent APIs** to solve user pain points:
 ### **Architecture Overview**
 
 ```
-┌─────────────────┐
+┌──────────────────┐
 │   React Frontend │
 │   (TypeScript)   │
 └────────┬─────────┘
@@ -170,7 +170,7 @@ Unlike generic solar calculators that provide static estimates, SolarMind combin
 ```bash
 # Clone the repository
 git clone https://github.com/markozele1/solarmind-ai
-cd YOUR_REPO
+cd solarmind-ai
 
 # Install dependencies
 npm install
@@ -226,5 +226,3 @@ Built for **hAIckathon** using:
 - [OpenAI](https://openai.com) - GPT-4o-mini for AI chat and summaries
 
 ---
-
-**Team O(no)** | Empowering sustainable energy decisions through AI 🌱⚡
